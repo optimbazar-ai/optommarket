@@ -13,7 +13,20 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [
+      'https://optommarket.vercel.app',
+      'https://optommarket-frontend.vercel.app',
+      process.env.FRONTEND_URL,
+    ].filter(Boolean)
+  : '*';
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -27,7 +40,8 @@ app.get('/', (req, res) => {
       health: '/api/health',
       users: '/api/users',
       products: '/api/products',
-      orders: '/api/orders'
+      orders: '/api/orders',
+      chatbot: '/api/chatbot/chat'
     }
   });
 });
