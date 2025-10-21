@@ -20,9 +20,15 @@ export default function LoginPage() {
     }
 
     try {
-      await login(email, password);
+      const result = await login(email, password);
       toast.success('Muvaffaqiyatli kirildi! 🎉');
-      router.push('/');
+      
+      // Redirect to admin panel if user is admin
+      if (result.user.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } catch (error: any) {
       toast.error(error.response?.data?.error || 'Login xatolik!');
     }
