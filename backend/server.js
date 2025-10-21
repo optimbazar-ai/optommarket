@@ -11,7 +11,7 @@ const chatbotRoutes = require('./routes/chatbot');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 const allowedOrigins = process.env.NODE_ENV === 'production'
@@ -20,7 +20,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
       'https://optommarket-frontend.vercel.app',
       process.env.FRONTEND_URL,
     ].filter(Boolean)
-  : '*';
+  : ['http://localhost:5000', 'http://127.0.0.1:5000', ...((process.env.REPLIT_DEV_DOMAIN || process.env.REPL_SLUG) ? [`https://${process.env.REPLIT_DEV_DOMAIN || process.env.REPL_SLUG}.repl.co`] : [])];
 
 app.use(cors({
   origin: allowedOrigins,
@@ -93,7 +93,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n${'='.repeat(50)}`);
   console.log(`🚀 OPTOMMARKET Backend Server`);
   console.log(`${'='.repeat(50)}`);
