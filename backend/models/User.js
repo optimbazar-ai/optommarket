@@ -3,13 +3,13 @@ const bcrypt = require('bcryptjs');
 
 class User {
   // Create new user
-  static async create({ username, email, password, phone, address, role = 'customer' }) {
+  static async create({ username, email, password, phone, role = 'customer' }) {
     try {
       const password_hash = await bcrypt.hash(password, 10);
       const result = await pool.query(
-        `INSERT INTO users (username, email, password_hash, phone, address, role) 
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, username, email, phone, address, role, created_at`,
-        [username, email, password_hash, phone, address, role]
+        `INSERT INTO users (username, email, password_hash, phone, role) 
+         VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, phone, role, created_at`,
+        [username, email, password_hash, phone, role]
       );
       return result.rows[0];
     } catch (error) {
@@ -32,7 +32,7 @@ class User {
   // Find user by ID
   static async findById(id) {
     const result = await pool.query(
-      'SELECT id, username, email, phone, address, role, created_at FROM users WHERE id = $1',
+      'SELECT id, username, email, phone, role, created_at FROM users WHERE id = $1',
       [id]
     );
     return result.rows[0];
@@ -53,11 +53,11 @@ class User {
 
   // Update user
   static async update(id, updates) {
-    const { phone, address } = updates;
+    const { phone } = updates;
     const result = await pool.query(
-      `UPDATE users SET phone = $1, address = $2, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $3 RETURNING id, username, email, phone, address, role`,
-      [phone, address, id]
+      `UPDATE users SET phone = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE id = $2 RETURNING id, username, email, phone, role`,
+      [phone, id]
     );
     return result.rows[0];
   }
