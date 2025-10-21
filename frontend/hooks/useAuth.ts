@@ -35,6 +35,10 @@ export const useAuth = () => {
       const response = await apiClient.post('/users/login', { email, password });
       localStorage.setItem('token', response.data.token);
       setUser(response.data.user);
+      
+      // Fetch fresh profile to ensure role is loaded
+      await fetchProfile();
+      
       return response.data;
     } catch (error) {
       throw error;
