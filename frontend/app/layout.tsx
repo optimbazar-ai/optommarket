@@ -1,13 +1,12 @@
-import type { Metadata } from 'next'
+'use client';
 import { Inter } from 'next/font/google'
 import './globals.css'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import { CartProvider } from '@/context/CartContext'
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
-
-export const metadata: Metadata = {
-  title: 'OPTOMMARKET - AI Chatbot bilan Optom Do\'kon',
-  description: 'Zamonaviy optom savdo platformasi AI chatbot integratsiyasi bilan',
-}
 
 export default function RootLayout({
   children,
@@ -16,7 +15,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="uz">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <CartProvider>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <main className="flex-grow bg-gray-50">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+            }}
+          />
+        </CartProvider>
+      </body>
     </html>
   )
 }
