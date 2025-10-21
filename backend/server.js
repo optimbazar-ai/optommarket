@@ -8,6 +8,7 @@ const usersRoutes = require('./routes/users');
 const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
 const chatbotRoutes = require('./routes/chatbot');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -41,7 +42,8 @@ app.get('/', (req, res) => {
       users: '/api/users',
       products: '/api/products',
       orders: '/api/orders',
-      chatbot: '/api/chatbot/chat'
+      chatbot: '/api/chatbot/chat',
+      admin: '/api/admin'
     }
   });
 });
@@ -71,6 +73,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Handler
 app.use((req, res) => {

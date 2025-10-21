@@ -28,6 +28,14 @@ export default function Navbar() {
                 <Link href="/profile" className="hover:text-blue-200 transition">
                   👤 Profil
                 </Link>
+                {user?.role === 'admin' && (
+                  <Link 
+                    href="/admin" 
+                    className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700 transition font-semibold"
+                  >
+                    ⚙️ Admin Panel
+                  </Link>
+                )}
                 <button 
                   onClick={logout}
                   className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition"
