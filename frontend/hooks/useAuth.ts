@@ -36,8 +36,12 @@ export const useAuth = () => {
       localStorage.setItem('token', response.data.token);
       setUser(response.data.user);
       
-      // Fetch fresh profile to ensure role is loaded
-      await fetchProfile();
+      // Try to fetch profile, but don't fail if it errors
+      try {
+        await fetchProfile();
+      } catch (profileError) {
+        console.log('Profile fetch failed, but continuing with login data');
+      }
       
       return response.data;
     } catch (error) {
