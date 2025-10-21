@@ -13,24 +13,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-    if (!loading && user && user.role !== 'admin') {
-      alert('⚠️ Admin ruxsati kerak!');
-      router.push('/');
+    // Check token first before redirecting
+    const token = localStorage.getItem('token');
+    
+    if (!loading) {
+      if (!token || !user) {
+        router.push('/login');
+      } else if (user && user.role !== 'admin') {
+        alert('⚠️ Admin ruxsati kerak!');
+        router.push('/');
+      }
     }
   }, [user, loading, router]);
 
-  if (loading || !user || user.role !== 'admin') {
+  // Check token if user is still loading
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  
+  if (loading || (!user && token)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-600">Loading admin panel...</p>
         </div>
       </div>
     );
+  }
+  
+  if (!user || user.role !== 'admin') {
+    return null; // Will redirect in useEffect
   }
 
   const menuItems = [
