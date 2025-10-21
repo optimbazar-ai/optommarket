@@ -7,6 +7,7 @@ const pool = require('./models/db');
 const usersRoutes = require('./routes/users');
 const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
+const chatbotRoutes = require('./routes/chatbot');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -55,6 +56,7 @@ app.get('/api/health', async (req, res) => {
 app.use('/api/users', usersRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/orders', ordersRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // 404 Handler
 app.use((req, res) => {
@@ -81,6 +83,7 @@ app.listen(PORT, () => {
   console.log(`🌐 URL: http://localhost:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Database: ${process.env.DATABASE_URL ? 'Configured ✅' : 'Not configured ❌'}`);
+  console.log(`🤖 Chatbot: POST http://localhost:${PORT}/api/chatbot/chat`);
   console.log(`${'='.repeat(50)}\n`);
 });
 
