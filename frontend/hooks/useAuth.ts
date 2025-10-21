@@ -16,7 +16,19 @@ export const useAuth = () => {
     // Check if user is logged in
     const token = localStorage.getItem('token');
     if (token) {
-      fetchProfile();
+      // Parse token to get user info directly
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUser({
+          id: payload.id,
+          email: payload.email,
+          username: payload.username || payload.email.split('@')[0],
+          role: payload.role
+        });
+      } catch (error) {
+        console.error('Token parse error:', error);
+        localStorage.removeItem('token');
+      }
     }
   }, []);
 
@@ -34,14 +46,9 @@ export const useAuth = () => {
     try {
       const response = await apiClient.post('/users/login', { email, password });
       localStorage.setItem('token', response.data.token);
-      setUser(response.data.user);
       
-      // Try to fetch profile, but don't fail if it errors
-      try {
-        await fetchProfile();
-      } catch (profileError) {
-        console.log('Profile fetch failed, but continuing with login data');
-      }
+      // Set user from login response
+      setUser(response.data.user);
       
       return response.data;
     } catch (error) {
