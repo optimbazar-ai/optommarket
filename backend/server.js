@@ -20,7 +20,14 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
       'https://optommarket-frontend.vercel.app',
       process.env.FRONTEND_URL,
     ].filter(Boolean)
-  : ['http://localhost:5000', 'http://127.0.0.1:5000', ...((process.env.REPLIT_DEV_DOMAIN || process.env.REPL_SLUG) ? [`https://${process.env.REPLIT_DEV_DOMAIN || process.env.REPL_SLUG}.repl.co`] : [])];
+  : [
+      'http://localhost:5000', 
+      'http://127.0.0.1:5000',
+      ...(process.env.REPLIT_DEV_DOMAIN ? [
+        `https://${process.env.REPLIT_DEV_DOMAIN}`,
+        `https://${process.env.REPLIT_DEV_DOMAIN}:5000`
+      ] : [])
+    ];
 
 app.use(cors({
   origin: allowedOrigins,
