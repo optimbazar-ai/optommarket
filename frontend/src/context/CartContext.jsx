@@ -32,14 +32,25 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, quantity = 1) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.product._id === product._id)
+      // Ensure product has _id field
+      const productId = product._id || product.id
+      if (!productId) {
+        console.error('Product missing ID:', product)
+        return prevCart
+      }
+
+      const existingItem = prevCart.find(item => {
+        const itemId = item.product._id || item.product.id
+        return itemId === productId
+      })
       
       if (existingItem) {
-        return prevCart.map(item =>
-          item.product._id === product._id
+        return prevCart.map(item => {
+          const itemId = item.product._id || item.product.id
+          return itemId === productId
             ? { ...item, quantity: item.quantity + quantity }
             : item
-        )
+        })
       }
       
       return [...prevCart, { product, quantity }]

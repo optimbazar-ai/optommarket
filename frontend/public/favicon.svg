@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#2563EB"/>
+  
+  <!-- Shopping Box -->
+  <path d="M10 8L16 11L22 8L16 5L10 8Z" fill="#60A5FA"/>
+  <path d="M10 8V20L16 23V11L10 8Z" fill="#3B82F6"/>
+  <path d="M16 11V23L22 20V8L16 11Z" fill="#1E40AF"/>
+  
+  <!-- Highlight -->
+  <circle cx="18" cy="7" r="2" fill="#FFFFFF" opacity="0.4"/>
+</svg>

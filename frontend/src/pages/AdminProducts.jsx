@@ -18,7 +18,7 @@ const AdminProducts = () => {
     minOrderQuantity: '',
     category: '',
     brand: '',
-    unit: 'piece',
+    unit: 'dona',
     images: [''],
     featured: false
   })
@@ -29,15 +29,19 @@ const AdminProducts = () => {
 
   const loadData = async () => {
     try {
+      console.log('📦 Loading products and categories...')
       const [productsRes, categoriesRes] = await Promise.all([
         adminAPI.getProducts(),
-        categoriesAPI.getAll()
+        adminAPI.getCategories()
       ])
+      console.log('✅ Products loaded:', productsRes.data.length)
+      console.log('✅ Categories loaded:', categoriesRes.data)
       setProducts(productsRes.data)
       setCategories(categoriesRes.data)
     } catch (err) {
-      console.error('Error loading data:', err)
-      setError('Ma\'lumotlarni yuklashda xatolik')
+      console.error('❌ Error loading data:', err)
+      console.error('Error details:', err.response?.data)
+      setError('Ma\'lumotlarni yuklashda xatolik: ' + (err.response?.data?.message || err.message))
     } finally {
       setLoading(false)
     }
@@ -107,7 +111,7 @@ const AdminProducts = () => {
       minOrderQuantity: product.minOrderQuantity || 1,
       category: product.category?._id || '',
       brand: product.brand || '',
-      unit: product.unit || 'piece',
+      unit: product.unit || 'dona',
       images: product.images.length > 0 ? product.images : [''],
       featured: product.featured || false
     })
@@ -138,7 +142,7 @@ const AdminProducts = () => {
       minOrderQuantity: '',
       category: '',
       brand: '',
-      unit: 'piece',
+      unit: 'dona',
       images: [''],
       featured: false
     })
@@ -365,7 +369,7 @@ const AdminProducts = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Kategoriya *
+                    Kategoriya * {categories.length > 0 && `(${categories.length} ta)`}
                   </label>
                   <select
                     name="category"
@@ -375,12 +379,21 @@ const AdminProducts = () => {
                     required
                   >
                     <option value="">Tanlang</option>
-                    {categories.map((cat) => (
-                      <option key={cat._id} value={cat._id}>
-                        {cat.name}
-                      </option>
-                    ))}
+                    {categories.length === 0 ? (
+                      <option disabled>Kategoriyalar yuklanmoqda...</option>
+                    ) : (
+                      categories.map((cat) => (
+                        <option key={cat._id} value={cat._id}>
+                          {cat.name}
+                        </option>
+                      ))
+                    )}
                   </select>
+                  {categories.length === 0 && (
+                    <p className="text-xs text-red-600 mt-1">
+                      Kategoriyalar yuklanmadi. Console-ni tekshiring (F12)
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -393,10 +406,10 @@ const AdminProducts = () => {
                     onChange={handleChange}
                     className="input"
                   >
-                    <option value="piece">dona</option>
+                    <option value="dona">dona</option>
                     <option value="kg">kg</option>
-                    <option value="box">quti</option>
-                    <option value="pack">to'plam</option>
+                    <option value="quti">quti</option>
+                    <option value="toplam">to'plam</option>
                   </select>
                 </div>
               </div>

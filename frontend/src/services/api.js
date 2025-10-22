@@ -73,6 +73,11 @@ export const paymentsAPI = {
   getStatus: (orderId) => api.get(`/payments/status/${orderId}`)
 }
 
+export const blogAPI = {
+  getAll: (params) => api.get('/blog', { params }),
+  getBySlug: (slug) => api.get(`/blog/${slug}`)
+}
+
 export const adminAPI = {
   // Dashboard
   getDashboard: () => api.get('/admin/dashboard'),
@@ -89,13 +94,30 @@ export const adminAPI = {
   
   // Users
   getUsers: () => api.get('/admin/users'),
+  getUserStats: () => api.get('/admin/users/stats'),
+  getUserOrders: (id) => api.get(`/admin/users/${id}/orders`),
   updateUserRole: (id, role) => api.put(`/admin/users/${id}/role`, { role }),
   deleteUser: (id) => api.delete(`/admin/users/${id}`),
+  
+  // Categories
+  getCategories: () => api.get('/admin/categories'),
+  createCategory: (data) => api.post('/admin/categories', data),
+  updateCategory: (id, data) => api.put(`/admin/categories/${id}`, data),
+  deleteCategory: (id) => api.delete(`/admin/categories/${id}`),
+  
+  // Blog
+  getBlogPosts: () => api.get('/admin/blog'),
+  createBlogPost: (data) => api.post('/admin/blog', data),
+  updateBlogPost: (id, data) => api.put(`/admin/blog/${id}`, data),
+  deleteBlogPost: (id) => api.delete(`/admin/blog/${id}`),
+  publishBlogPost: (id, published) => api.put(`/admin/blog/${id}/publish`, { published }),
+  generateBlogPosts: () => api.post('/admin/blog/generate'),
   
   // Analytics
   getSalesAnalytics: () => api.get('/admin/analytics/sales'),
   getTopProducts: () => api.get('/admin/analytics/top-products'),
-  getCategoryAnalytics: () => api.get('/admin/analytics/categories')
+  getCategoryAnalytics: () => api.get('/admin/analytics/categories'),
+  getDetailedStats: () => api.get('/admin/stats/detailed')
 }
 
 export default api

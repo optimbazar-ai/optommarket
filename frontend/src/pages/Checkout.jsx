@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ShoppingCart, CreditCard, Shield, Truck, Headphones } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { ordersAPI, paymentsAPI } from '../services/api'
+import RegionSelector, { regions } from '../components/RegionSelector'
 
 const Checkout = () => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const Checkout = () => {
     fullName: '',
     email: '',
     phone: '',
+    regionCode: '',
     address: '',
     city: '',
     postalCode: '',
@@ -28,10 +30,34 @@ const Checkout = () => {
     }))
   }
 
-  const validateForm = () => {
-    const { fullName, email, phone, address, city } = formData
+  // Calculate shipping cost
+  const getShippingCost = () => {
+    const total = getCartTotal()
+    const SHIPPING_THRESHOLD = 3000000 // 3 million so'm
+    
+    // Agar 3 milliondan ortiq bo'lsa - bepul
+    if (total >= SHIPPING_THRESHOLD) {
+      return 0
+    }
+    
+    // Aks holda regionga qarab
+    if (!formData.regionCode) {
+      return 30000 // Default shipping cost
+    }
+    
+    const selectedRegion = regions.find(r => r.code === formData.regionCode)
+    return selectedRegion ? selectedRegion.deliveryPrice : 30000
+  }
 
-    if (!fullName || !email || !phone || !address || !city) {
+  // Calculate final total with shipping
+  const getFinalTotal = () => {
+    return getCartTotal() + getShippingCost()
+  }
+
+  const validateForm = () => {
+    const { fullName, email, phone, regionCode, address, city } = formData
+
+    if (!fullName || !email || !phone || !regionCode || !address || !city) {
       setError('Barcha majburiy maydonlarni to\'ldiring')
       return false
     }
@@ -69,10 +95,19 @@ const Checkout = () => {
     setLoading(true)
 
     try {
+      // Validate cart items have product IDs
+      const invalidItems = cart.filter(item => !item.product._id && !item.product.id)
+      if (invalidItems.length > 0) {
+        console.error('Invalid cart items:', invalidItems)
+        setError('Savatda noto\'g\'ri mahsulotlar bor. Iltimos, savatni tozalang va qaytadan qo\'shing.')
+        setLoading(false)
+        return
+      }
+
       // Prepare order data
       const orderData = {
         items: cart.map(item => ({
-          product: item.product._id,
+          product: item.product._id || item.product.id,
           quantity: item.quantity,
           price: item.product.wholesalePrice || item.product.price
         })),
@@ -82,14 +117,19 @@ const Checkout = () => {
           phone: formData.phone
         },
         shippingAddress: {
+          region: regions.find(r => r.code === formData.regionCode)?.name || '',
+          regionCode: formData.regionCode,
           address: formData.address,
           city: formData.city,
           postalCode: formData.postalCode
         },
         paymentMethod: formData.paymentMethod,
-        totalPrice: getCartTotal(),
+        shippingPrice: getShippingCost(),
+        totalPrice: getFinalTotal(),
         notes: formData.notes
       }
+
+      console.log('Sending order data:', orderData)
 
       // Create order
       const response = await ordersAPI.create(orderData)
@@ -112,8 +152,24 @@ const Checkout = () => {
         navigate(`/order-success/${order._id}`)
       }
     } catch (err) {
-      console.error('Order error:', err)
-      setError(err.message || 'Buyurtma yaratishda xatolik yuz berdi')
+      console.error('❌ Order error:', err)
+      console.error('Error response:', err.response?.data)
+      
+      // Get detailed error message
+      let errorMessage = err.response?.data?.message 
+        || err.response?.data?.error 
+        || err.message 
+        || 'Buyurtma yaratishda xatolik yuz berdi'
+      
+      // Add validation details if available
+      if (err.response?.data?.details) {
+        const details = err.response.data.details
+          .map(d => `${d.field}: ${d.message}`)
+          .join(', ')
+        errorMessage += ` (${details})`
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -208,8 +264,54 @@ const Checkout = () => {
             {/* Shipping Address */}
             <div>
               <h2 className="text-xl font-semibold mb-4">Yetkazib berish manzili</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
+              <div className="space-y-4">
+                {/* Region Selector */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Viloyat *
+                  </label>
+                  <RegionSelector
+                    value={formData.regionCode}
+                    onChange={(code) => setFormData(prev => ({ ...prev, regionCode: code }))}
+                    required
+                    showDeliveryInfo={true}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    💡 3,000,000 so'mdan ortiq buyurtmalar uchun yetkazib berish <span className="font-bold text-green-600">BEPUL</span>
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Shahar *
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      className="input"
+                      placeholder="Toshkent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Pochta indeksi
+                    </label>
+                    <input
+                      type="text"
+                      name="postalCode"
+                      value={formData.postalCode}
+                      onChange={handleChange}
+                      className="input"
+                      placeholder="100000"
+                    />
+                  </div>
+                </div>
+                
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Manzil *
                   </label>
@@ -221,33 +323,6 @@ const Checkout = () => {
                     className="input"
                     placeholder="Ko'cha, uy raqami"
                     required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Shahar *
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    className="input"
-                    placeholder="Toshkent"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Pochta indeksi
-                  </label>
-                  <input
-                    type="text"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                    className="input"
-                    placeholder="100000"
                   />
                 </div>
               </div>
@@ -374,11 +449,20 @@ const Checkout = () => {
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Yetkazib berish:</span>
-                <span className="text-green-600 font-medium">Bepul</span>
+                {getShippingCost() === 0 ? (
+                  <span className="text-green-600 font-medium">Bepul</span>
+                ) : (
+                  <span>{formatPrice(getShippingCost())}</span>
+                )}
               </div>
+              {getCartTotal() < 3000000 && getShippingCost() > 0 && (
+                <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
+                  💡 Yana {formatPrice(3000000 - getCartTotal())} qo'shing va yetkazib berish bepul bo'ladi!
+                </div>
+              )}
               <div className="flex justify-between text-xl font-bold border-t pt-2">
                 <span>Jami:</span>
-                <span className="text-primary-600">{formatPrice(getCartTotal())}</span>
+                <span className="text-primary-600">{formatPrice(getFinalTotal())}</span>
               </div>
             </div>
 

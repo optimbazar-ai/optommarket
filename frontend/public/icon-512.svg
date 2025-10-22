@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="80" fill="#2563EB"/>
+  
+  <!-- Shopping Box -->
+  <g transform="translate(96, 96)">
+    <path d="M80 64L160 96L240 64L160 32L80 64Z" fill="#60A5FA" opacity="0.8"/>
+    <path d="M80 64V224L160 256V96L80 64Z" fill="#3B82F6"/>
+    <path d="M160 96V256L240 224V64L160 96Z" fill="#1E40AF"/>
+    
+    <!-- "O" Circle -->
+    <circle cx="80" cy="144" r="40" stroke="#FFFFFF" stroke-width="10" fill="none" opacity="0.9"/>
+    
+    <!-- Highlight -->
+    <circle cx="170" cy="50" r="20" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>

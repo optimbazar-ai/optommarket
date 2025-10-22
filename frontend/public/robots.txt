@@ -1,0 +1,20 @@
+# OptoMarket.uz Robots.txt
+
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /categories
+Allow: /blog
+
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /checkout
+Disallow: /seller
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://optommarket.uz/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1

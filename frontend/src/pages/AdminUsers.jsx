@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Shield, ShieldOff, Trash2, RefreshCw } from 'lucide-react'
+import { Shield, ShieldOff, Trash2, RefreshCw, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react'
 import { adminAPI } from '../services/api'
+import api from '../services/api'
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([])
@@ -51,6 +52,33 @@ const AdminUsers = () => {
     }
   }
 
+  const handleVerifySeller = async (userId, status) => {
+    const message = status === 'approved' 
+      ? 'Sotuvchini tasdiqlaysizmi?'
+      : 'Sotuvchini rad etasizmi?'
+    
+    if (!confirm(message)) return
+
+    let rejectionReason = ''
+    if (status === 'rejected') {
+      rejectionReason = prompt('Rad etish sababini kiriting:')
+      if (!rejectionReason) return
+    }
+
+    try {
+      await api.put(`/admin/users/${userId}/verify-seller`, {
+        verificationStatus: status,
+        rejectionReason
+      }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+      await loadUsers()
+    } catch (err) {
+      console.error('Error verifying seller:', err)
+      alert('Sotuvchini tasdiqlashda xatolik')
+    }
+  }
+
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('uz-UZ', {
       day: 'numeric',
@@ -63,18 +91,48 @@ const AdminUsers = () => {
     const styles = {
       admin: 'bg-red-100 text-red-800',
       seller: 'bg-blue-100 text-blue-800',
-      buyer: 'bg-green-100 text-green-800'
+      buyer: 'bg-green-100 text-green-800',
+      customer: 'bg-green-100 text-green-800'
     }
     
     const labels = {
       admin: 'Admin',
       seller: 'Sotuvchi',
-      buyer: 'Xaridor'
+      buyer: 'Xaridor',
+      customer: 'Xaridor'
     }
     
     return (
       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${styles[role] || 'bg-gray-100 text-gray-800'}`}>
         {labels[role] || role}
+      </span>
+    )
+  }
+
+  const getVerificationBadge = (user) => {
+    if (user.role !== 'seller') return null
+    
+    const status = user.sellerInfo?.verificationStatus || 'pending'
+    const styles = {
+      pending: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+      approved: 'bg-green-100 text-green-800 border-green-300',
+      rejected: 'bg-red-100 text-red-800 border-red-300'
+    }
+    const icons = {
+      pending: <Clock className="w-3 h-3" />,
+      approved: <CheckCircle className="w-3 h-3" />,
+      rejected: <XCircle className="w-3 h-3" />
+    }
+    const labels = {
+      pending: 'Kutilmoqda',
+      approved: 'Tasdiqlangan',
+      rejected: 'Rad etilgan'
+    }
+    
+    return (
+      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${styles[status]}`}>
+        {icons[status]}
+        {labels[status]}
       </span>
     )
   }
@@ -144,6 +202,7 @@ const AdminUsers = () => {
                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Email</th>
                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Telefon</th>
                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Rol</th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Holat</th>
                 <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Ro'yxatdan o'tgan</th>
                 <th className="text-right py-3 px-4 text-sm font-semibold text-gray-700">Amallar</th>
               </tr>
@@ -168,11 +227,32 @@ const AdminUsers = () => {
                   <td className="py-3 px-4">
                     {getRoleBadge(user.role)}
                   </td>
+                  <td className="py-3 px-4">
+                    {getVerificationBadge(user)}
+                  </td>
                   <td className="py-3 px-4 text-sm text-gray-600">
                     {formatDate(user.createdAt)}
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center justify-end gap-2">
+                      {user.role === 'seller' && user.sellerInfo?.verificationStatus === 'pending' && (
+                        <>
+                          <button
+                            onClick={() => handleVerifySeller(user._id, 'approved')}
+                            className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                            title="Sotuvchini tasdiqlash"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleVerifySeller(user._id, 'rejected')}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                            title="Sotuvchini rad etish"
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
                       <button
                         onClick={() => handleToggleAdmin(user._id, user.role)}
                         className={`p-2 rounded-lg transition ${

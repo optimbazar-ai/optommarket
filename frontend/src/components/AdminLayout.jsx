@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingBag, Users, BarChart3, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingBag, Users, BarChart3, LogOut, Menu, X, Tag, FileText, Settings } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useState, useEffect } from 'react'
 
@@ -24,9 +24,12 @@ const AdminLayout = () => {
   const navItems = [
     { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/admin/products', icon: Package, label: 'Mahsulotlar' },
+    { path: '/admin/categories', icon: Tag, label: 'Kategoriyalar' },
     { path: '/admin/orders', icon: ShoppingBag, label: 'Buyurtmalar' },
     { path: '/admin/users', icon: Users, label: 'Foydalanuvchilar' },
-    { path: '/admin/analytics', icon: BarChart3, label: 'Statistika' }
+    { path: '/admin/blog', icon: FileText, label: 'Blog' },
+    { path: '/admin/analytics', icon: BarChart3, label: 'Statistika' },
+    { path: '/admin/settings', icon: Settings, label: 'Sozlamalar' }
   ]
 
   const isActive = (path) => {
