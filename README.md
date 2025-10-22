@@ -8,13 +8,26 @@ OptoMarket.uz - bu ishonchli va qulay optom xaridlar uchun yaratilgan zamonaviy 
 
 ### ✨ Asosiy xususiyatlar
 
+#### E-commerce Features:
 - 🔐 Foydalanuvchi autentifikatsiyasi (JWT)
 - 🛍️ Mahsulotlar katalogi
 - 🔍 Qidiruv va filtrlash
 - 📦 Kategoriyalar tizimi
 - 💰 Optom narxlari
+- 🛒 Shopping cart & checkout
+- 💳 Click va Payme to'lov tizimi
 - 📱 Responsive dizayn
 - 🎨 Modern UI (TailwindCSS)
+
+#### Admin Panel Features:
+- 📊 Dashboard with analytics
+- 📦 Product management (CRUD)
+- 🏷️ Category management (CRUD)
+- 📋 Order management & tracking
+- 👥 User management (roles, permissions)
+- 📝 Blog/CMS system with WYSIWYG editor
+- 📈 Advanced statistics & charts
+- ⚙️ Settings (store, shipping, tax)
 
 ## 🚀 Texnologiyalar
 
@@ -33,6 +46,8 @@ OptoMarket.uz - bu ishonchli va qulay optom xaridlar uchun yaratilgan zamonaviy 
 - **Axios** - HTTP client
 - **TailwindCSS** - Styling
 - **Lucide React** - Icons
+- **ReactQuill** - WYSIWYG editor
+- **Recharts** - Data visualization
 
 ## 📁 Loyiha strukturasi
 
@@ -138,6 +153,11 @@ Bu buyruq:
 - Email: `test@optommarket.uz`
 - Parol: `test123`
 
+**Admin foydalanuvchi:**
+- Email: `admin@optommarket.uz`
+- Parol: `admin123`
+- Admin yaratish: `npm run create-admin`
+
 ### 6️⃣ Backend-ni ishga tushirish
 
 ```bash
@@ -186,6 +206,48 @@ DELETE /api/products/:id - Mahsulot o'chirish (protected)
 GET  /api/categories     - Barcha kategoriyalar
 GET  /api/categories/:id - Bitta kategoriya
 POST /api/categories     - Kategoriya qo'shish (protected)
+```
+
+### Admin (Admin only - requires admin role)
+```bash
+# Dashboard
+GET    /api/admin/dashboard        - Admin dashboard stats
+
+# Products Management
+GET    /api/admin/products         - Get all products
+POST   /api/admin/products         - Create product
+PUT    /api/admin/products/:id     - Update product
+DELETE /api/admin/products/:id     - Delete product
+
+# Orders Management
+GET    /api/admin/orders           - Get all orders
+PUT    /api/admin/orders/:id/status - Update order status
+
+# Users Management
+GET    /api/admin/users            - Get all users
+GET    /api/admin/users/stats      - Get user statistics
+GET    /api/admin/users/:id/orders - Get user orders
+PUT    /api/admin/users/:id/role   - Update user role
+DELETE /api/admin/users/:id        - Delete user
+
+# Categories Management
+GET    /api/admin/categories       - Get all categories
+POST   /api/admin/categories       - Create category
+PUT    /api/admin/categories/:id   - Update category
+DELETE /api/admin/categories/:id   - Delete category
+
+# Blog Management
+GET    /api/admin/blog             - Get all blog posts
+POST   /api/admin/blog             - Create blog post
+PUT    /api/admin/blog/:id         - Update blog post
+DELETE /api/admin/blog/:id         - Delete blog post
+PUT    /api/admin/blog/:id/publish - Publish/unpublish post
+
+# Analytics
+GET    /api/admin/analytics/sales       - Sales analytics
+GET    /api/admin/analytics/top-products - Top products
+GET    /api/admin/analytics/categories   - Category analytics
+GET    /api/admin/stats/detailed         - Detailed statistics
 ```
 
 ## 📖 Foydalanish

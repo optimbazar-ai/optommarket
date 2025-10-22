@@ -64,6 +64,8 @@ router.get('/:id', async (req, res) => {
 // POST /api/orders - Create new order
 router.post('/', async (req, res) => {
   try {
+    console.log('📦 Creating order, request body:', JSON.stringify(req.body, null, 2));
+    
     const { items, customerInfo, shippingAddress, paymentMethod, notes } = req.body;
     
     // Validate items
@@ -131,16 +133,26 @@ router.post('/', async (req, res) => {
     const populatedOrder = await Order.findById(order._id)
       .populate('items.product', 'name images');
     
+    console.log('✅ Order created successfully:', populatedOrder._id);
+    
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
       data: populatedOrder
     });
   } catch (error) {
+    console.error('❌ Error creating order:', error);
+    console.error('Error details:', error.message);
+    console.error('Error stack:', error.stack);
+    
     res.status(400).json({
       success: false,
       message: 'Error creating order',
-      error: error.message
+      error: error.message,
+      details: error.errors ? Object.keys(error.errors).map(key => ({
+        field: key,
+        message: error.errors[key].message
+      })) : undefined
     });
   }
 });

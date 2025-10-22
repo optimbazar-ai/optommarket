@@ -135,4 +135,78 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+// PUT /api/auth/profile - Update user profile (protected)
+router.put('/profile', protect, async (req, res) => {
+  try {
+    const { name, phone, companyName, address, sellerInfo } = req.body;
+    
+    const updateData = {
+      name,
+      phone,
+      companyName,
+      address
+    };
+
+    // If user is seller, update seller info
+    if (req.user.role === 'seller' && sellerInfo) {
+      updateData.sellerInfo = {
+        ...req.user.sellerInfo,
+        ...sellerInfo
+      };
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: user
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Error updating profile',
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/auth/password - Change password (protected)
+router.put('/password', protect, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    // Get user with password
+    const user = await User.findById(req.user._id).select('+password');
+
+    // Check current password
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: 'Current password is incorrect'
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Error changing password',
+      error: error.message
+    });
+  }
+});
+
 export default router;

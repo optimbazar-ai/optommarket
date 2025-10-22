@@ -39,6 +39,44 @@ const userSchema = new mongoose.Schema({
     region: String,
     postalCode: String
   },
+  // Seller-specific fields
+  sellerInfo: {
+    verified: {
+      type: Boolean,
+      default: false
+    },
+    verificationStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
+    },
+    inn: String, // Individual Taxpayer Number
+    bankAccount: String,
+    bankName: String,
+    bio: String,
+    commission: {
+      type: Number,
+      default: 10 // 10% commission
+    },
+    balance: {
+      type: Number,
+      default: 0
+    },
+    totalSales: {
+      type: Number,
+      default: 0
+    },
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5
+    },
+    reviewCount: {
+      type: Number,
+      default: 0
+    }
+  },
   active: {
     type: Boolean,
     default: true

@@ -31,11 +31,11 @@ export const adminAuth = async (req, res, next) => {
       });
     }
     
-    // Check if user is admin
-    if (user.role !== 'admin') {
+    // Check if user is admin or seller
+    if (user.role !== 'admin' && user.role !== 'seller') {
       return res.status(403).json({
         success: false,
-        message: 'Admin access required'
+        message: 'Admin or Seller access required'
       });
     }
     

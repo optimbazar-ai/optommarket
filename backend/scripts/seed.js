@@ -82,7 +82,7 @@ const seedDatabase = async () => {
         category: createdCategories[0]._id,
         stock: 50,
         minOrderQuantity: 5,
-        unit: 'piece',
+        unit: 'dona',
         brand: 'Samsung',
         featured: true,
         images: ['https://via.placeholder.com/400x400?text=Samsung+S24']
@@ -95,7 +95,7 @@ const seedDatabase = async () => {
         category: createdCategories[0]._id,
         stock: 30,
         minOrderQuantity: 3,
-        unit: 'piece',
+        unit: 'dona',
         brand: 'Apple',
         featured: true,
         images: ['https://via.placeholder.com/400x400?text=iPhone+15+Pro']
@@ -108,7 +108,7 @@ const seedDatabase = async () => {
         category: createdCategories[1]._id,
         stock: 200,
         minOrderQuantity: 10,
-        unit: 'piece',
+        unit: 'dona',
         brand: 'Local Brand',
         images: ['https://via.placeholder.com/400x400?text=Koylak']
       },
@@ -120,7 +120,7 @@ const seedDatabase = async () => {
         category: createdCategories[2]._id,
         stock: 100,
         minOrderQuantity: 20,
-        unit: 'box',
+        unit: 'quti',
         featured: true,
         images: ['https://via.placeholder.com/400x400?text=Non']
       },
@@ -132,7 +132,7 @@ const seedDatabase = async () => {
         category: createdCategories[3]._id,
         stock: 20,
         minOrderQuantity: 2,
-        unit: 'piece',
+        unit: 'dona',
         brand: 'Samsung',
         images: ['https://via.placeholder.com/400x400?text=Sovutgich']
       },

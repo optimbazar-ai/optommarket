@@ -40,15 +40,31 @@ const productSchema = new mongoose.Schema({
   images: [{
     type: String
   }],
+  videoUrl: {
+    type: String,
+    trim: true
+  },
   unit: {
     type: String,
-    enum: ['piece', 'kg', 'box', 'meter', 'liter'],
-    default: 'piece'
+    enum: ['dona', 'kg', 'quti', 'metr', 'litr', 'toplam'],
+    default: 'dona'
   },
   brand: {
     type: String,
     trim: true
   },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false
+  },
+  // Seller and approval fields
+  approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
+  rejectionReason: String,
   featured: {
     type: Boolean,
     default: false
@@ -56,6 +72,15 @@ const productSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: true
+  },
+  // Sales tracking
+  soldCount: {
+    type: Number,
+    default: 0
+  },
+  viewCount: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

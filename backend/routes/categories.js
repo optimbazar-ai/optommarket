@@ -1,5 +1,6 @@
 import express from 'express';
 import Category from '../models/Category.js';
+import Product from '../models/Product.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -9,10 +10,25 @@ router.get('/', async (req, res) => {
   try {
     const categories = await Category.find({ active: true }).sort('name');
     
+    // Add product count for each category
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({ 
+          category: category._id,
+          approvalStatus: 'approved',
+          active: true
+        });
+        return {
+          ...category.toObject(),
+          productCount
+        };
+      })
+    );
+    
     res.json({
       success: true,
-      count: categories.length,
-      data: categories
+      count: categoriesWithCount.length,
+      data: categoriesWithCount
     });
   } catch (error) {
     res.status(500).json({

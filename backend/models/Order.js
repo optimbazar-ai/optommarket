@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
   orderNumber: {
     type: String,
     unique: true,
-    required: true
+    required: false // Will be auto-generated
   },
   items: [{
     product: {
@@ -47,11 +47,19 @@ const orderSchema = new mongoose.Schema({
     }
   },
   shippingAddress: {
-    address: {
+    region: {
+      type: String,
+      required: true
+    },
+    regionCode: {
       type: String,
       required: true
     },
     city: {
+      type: String,
+      required: true
+    },
+    address: {
       type: String,
       required: true
     },
@@ -89,11 +97,16 @@ const orderSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Generate order number before saving
-orderSchema.pre('save', async function(next) {
+// Generate order number before validation
+orderSchema.pre('validate', async function(next) {
   if (this.isNew && !this.orderNumber) {
-    const count = await mongoose.model('Order').countDocuments();
-    this.orderNumber = `ORD-${Date.now()}-${String(count + 1).padStart(5, '0')}`;
+    try {
+      const count = await mongoose.model('Order').countDocuments();
+      this.orderNumber = `ORD-${Date.now()}-${String(count + 1).padStart(5, '0')}`;
+      console.log('✅ Generated order number:', this.orderNumber);
+    } catch (error) {
+      console.error('❌ Error generating order number:', error);
+    }
   }
   next();
 });
