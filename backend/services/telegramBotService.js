@@ -298,9 +298,13 @@ Yakshanba: Dam olish
     });
   }
 
-  async showProducts(chatId, page = 1, limit = 5) {
+  async showProducts(chatId, page = 1) {
     try {
+      const limit = 10;
       const skip = (page - 1) * limit;
+
+      console.log('🔍 Telegram bot: Mahsulotlar qidirilmoqda...');
+
       const products = await Product.find({ 
         active: true, 
         approvalStatus: 'approved',
@@ -317,8 +321,23 @@ Yakshanba: Dam olish
         stock: { $gt: 0 }
       });
 
+      console.log(`📊 Topilgan mahsulotlar: ${products.length} / ${total}`);
+
       if (products.length === 0) {
-        await this.bot.sendMessage(chatId, '❌ Hozircha mahsulotlar yo\'q');
+        console.log('❌ Approved mahsulotlar yo\'q');
+
+        // Debug: barcha mahsulotlarni sanash
+        const allProducts = await Product.countDocuments();
+        const pendingProducts = await Product.countDocuments({ approvalStatus: 'pending' });
+
+        await this.bot.sendMessage(chatId, 
+          `❌ Tasdiqlangan mahsulotlar yo'q\n\n` +
+          `📊 Statistika:\n` +
+          `• Jami: ${allProducts} ta\n` +
+          `• Pending: ${pendingProducts} ta\n` +
+          `• Approved: ${total} ta\n\n` +
+          `⚠️ Admin mahsulotlarni tasdiqlashi kerak`
+        );
         return;
       }
 
