@@ -4,6 +4,7 @@ import { ArrowRight, ShoppingBag, TrendingUp, Shield, Truck, Sparkles, Star, Use
 import { productsAPI, categoriesAPI, blogAPI } from '../services/api'
 import ProductCard from '../components/ProductCard'
 import SEO from '../components/SEO'
+import HeroSlider from '../components/HeroSlider'
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([])
@@ -42,8 +43,13 @@ const Home = () => {
         url="https://optommarket.uz"
       />
       <div className="bg-white dark:bg-dark-bg">
-        {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950 text-white py-24 md:py-32">
+        {/* Hero Slider Section */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <HeroSlider products={featuredProducts} />
+        </section>
+
+        {/* Old Hero Section (backup) - Hidden */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 dark:from-blue-900 dark:via-purple-900 dark:to-blue-950 text-white py-24 md:py-32 hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
