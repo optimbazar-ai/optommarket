@@ -5,11 +5,25 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const INITIAL_HISTORY = [
   {
     role: 'user',
-    parts: [{ text: 'Salom, sen kimsan?' }]
+    parts: [{ text: 'Sen kimsan va qanday yordam bera olasan?' }]
   },
   {
     role: 'model',
-    parts: [{ text: 'Men Google tomonidan yaratilgan katta til modeli, Gemini man.' }]
+    parts: [{ text: `Men OptomMarket.uz yordamchi chatbotiman! 
+
+OptomMarket.uz - O'zbekistondagi №1 optom savdo platformasi. Biz ishonchli optom mahsulotlar bozori hisoblanamiz.
+
+🛒 Bizning xizmatlarimiz:
+- 10,000+ mahsulotlar katalogi
+- Raqobatbardosh optom narxlar  
+- Ishonchli yetkazib berish xizmati
+- Sifatli mahsulotlar kafolati
+- 24/7 mijozlar qo'llab-quvvatlash
+
+📱 Aloqa: +998 99 644 84 44
+🌐 Sayt: https://optommarket.uz
+
+Sizga qanday yordam bera olaman? Mahsulotlar, narxlar, yetkazib berish yoki boshqa savollaringiz bo'lsa, menga bemalol so'rang!` }]
   }
 ];
 
@@ -17,7 +31,7 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     sender: 'model',
-    text: 'Salom! Men Gemini. Menga savol bering.'
+    text: 'Salom! Men OptomMarket.uz yordamchi chatbotiman. Sizga qanday yordam bera olaman? 😊'
   }
 ];
 
@@ -143,8 +157,8 @@ const Chatbot = () => {
   return (
     <div className="bg-gray-100 font-sans flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg h-[70vh] flex flex-col overflow-hidden">
-        <header className="bg-blue-600 text-white p-4 text-center rounded-t-lg">
-          <h1 className="text-xl font-semibold">Mening Gemini Chatbotim</h1>
+        <header className="bg-green-600 text-white p-4 text-center rounded-t-lg">
+          <h1 className="text-xl font-semibold">OptomMarket.uz Yordamchi</h1>
         </header>
 
         <main
@@ -183,7 +197,7 @@ const Chatbot = () => {
               type="text"
               id="user-input"
               placeholder="Xabaringizni yozing..."
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               value={inputValue}
               onChange={event => setInputValue(event.target.value)}
               onKeyDown={handleKeyDown}
@@ -191,7 +205,7 @@ const Chatbot = () => {
             />
             <button
               id="send-button"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 shadow disabled:opacity-50"
+              className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200 shadow disabled:opacity-50"
               onClick={handleSend}
               disabled={isLoading || !inputValue.trim()}
             >
