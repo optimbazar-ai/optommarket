@@ -33,7 +33,24 @@ class TelegramBotService {
     console.log('🚀 Telegram bot production da ishga tushmoqda...');
 
     try {
-      this.bot = new TelegramBot(token, { polling: true });
+      // Polling o'rniga webhook ishlatish (conflict oldini olish)
+      this.bot = new TelegramBot(token, { 
+        polling: {
+          interval: 2000,
+          autoStart: true,
+          params: {
+            timeout: 10
+          }
+        }
+      });
+      
+      // Eski webhook ni o'chirish
+      this.bot.deleteWebHook().then(() => {
+        console.log('🗑️ Eski webhook o\'chirildi');
+      }).catch(err => {
+        console.log('⚠️ Webhook o\'chirish xatolik:', err.message);
+      });
+      
       this.initialized = true;
       this.setupCommands();
       this.setupCallbackHandlers();

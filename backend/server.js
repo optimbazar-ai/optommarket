@@ -72,6 +72,23 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root URL - Welcome message
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'OptoMarket.uz Backend API',
+    version: '1.0.0',
+    status: 'Running',
+    documentation: '/api',
+    endpoints: {
+      api: '/api',
+      health: '/api/health',
+      products: '/api/products',
+      categories: '/api/categories'
+    }
+  });
+});
+
 // API Root - Welcome message
 app.get('/api', (req, res) => {
   res.json({
