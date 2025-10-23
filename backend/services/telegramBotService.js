@@ -484,7 +484,7 @@ ${product.wholesalePrice ? `💎 <b>Optom narx:</b> ${product.wholesalePrice.toL
 ${product.brand ? `🏷️ <b>Brend:</b> ${product.brand}\n` : ''}
 ${product.createdBy?.companyName ? `🏢 <b>Sotuvchi:</b> ${product.createdBy.companyName}\n` : ''}
 
-🌐 <b>Saytda ko'rish:</b> ${process.env.FRONTEND_URL || 'https://optommarket.uz'}/products/${product._id}
+🌐 <b>Saytda ko'rish:</b> ${(process.env.FRONTEND_URL || 'https://optommarket.netlify.app').replace(/\/$/, '')}/products/${product._id}
       `.trim();
 
       const keyboard = {
