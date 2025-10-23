@@ -29,6 +29,12 @@ OptoMarket.uz - bu ishonchli va qulay optom xaridlar uchun yaratilgan zamonaviy 
 - 📈 Advanced statistics & charts
 - ⚙️ Settings (store, shipping, tax)
 
+#### Automation Features:
+- ⏰ **Kunlik Blog Generator** - AI bilan avtomatik blog yaratish (har kuni 09:00)
+- 🛍️ **Mahsulot Promotion** - Telegram kanalga avtomatik marketing (kuniga 3 marta)
+- 🤖 **Gemini AI** - Chatbot va kontent yaratish
+- 📱 **Telegram Bot** - Buyurtma bildirnomalari va marketing
+
 ## 🚀 Texnologiyalar
 
 ### Backend
@@ -77,6 +83,7 @@ optommarketuz/
 │   └── package.json
 │
 ├── IMPLEMENTATION_GUIDE.md  # Qadam-baqadam yo'riqnoma
+├── CRON_JOBS_GUIDE.md      # Cron jobs dokumentatsiyasi
 └── README.md
 ```
 
@@ -315,15 +322,43 @@ npm run build
 npm run preview
 ```
 
-## 📚 Qadam-baqadam yo'riqnoma
+## 📚 Dokumentatsiya
 
-To'liq implementation guide uchun `IMPLEMENTATION_GUIDE.md` faylini o'qing.
+### Implementation Guides
+- **IMPLEMENTATION_GUIDE.md** - Qadam-baqadam yo'riqnoma
+- **CRON_JOBS_GUIDE.md** - Avtomatik vazifalar (Blog, Marketing)
+- **SEO_OPTIMIZATION_GUIDE.md** - To'liq SEO strategiya
+- **SEO_QUICK_SETUP.md** - 30 daqiqada SEO sozlash
 
-Guide-da quyidagilar mavjud:
+### Features
 - ✅ Har bir qadam uchun aniq ko'rsatmalar
 - ✅ Terminal va browser testlari
 - ✅ Xatoliklarni tuzatish jadvali
 - ✅ Success criteria har bir qadam uchun
+
+## 🔍 SEO va Marketing
+
+### SEO Features
+- ✅ **Structured Data** - JSON-LD schema markup
+- ✅ **Sitemaps** - 4 ta dynamic sitemap (products, categories, blog, static)
+- ✅ **Meta Tags** - Optimized for Google, Yandex, Bing
+- ✅ **Analytics** - Google Analytics + Yandex Metrika
+- ✅ **robots.txt** - Search engine optimized
+- ✅ **Canonical URLs** - Duplicate content prevention
+
+### Marketing Automation
+- ✅ **Blog Generator** - AI bilan har kuni 5 ta blog (09:00)
+- ✅ **Product Promotion** - Telegram kanalga kuniga 3 marta (10:00, 14:00, 18:00)
+- ✅ **AI Marketing** - Gemini AI bilan professional xabarlar
+- ✅ **Social Sharing** - Facebook, Telegram, Twitter
+
+### SEO Setup (30 daqiqa)
+1. Google Search Console - Sayt qo'shish va sitemap yuborish
+2. Yandex Webmaster - Verification va indexing
+3. Google Analytics - Tracking ID sozlash
+4. Yandex Metrika - Counter ID sozlash
+
+Batafsil: `SEO_QUICK_SETUP.md`
 
 ## 🐛 Xatoliklarni tuzatish
 

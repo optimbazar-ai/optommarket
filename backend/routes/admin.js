@@ -5,6 +5,7 @@ import User from '../models/User.js';
 import Category from '../models/Category.js';
 import Blog from '../models/Blog.js';
 import dailyBlogGenerator from '../jobs/dailyBlogGenerator.js';
+import dailyProductPromotion from '../jobs/dailyProductPromotion.js';
 import telegramService from '../services/telegramService.js';
 
 const router = express.Router();
@@ -1034,6 +1035,39 @@ router.get('/stats/detailed', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error fetching detailed stats',
+      error: error.message
+    });
+  }
+});
+
+// POST /api/admin/jobs/run-product-promotion - Manual product promotion
+router.post('/jobs/run-product-promotion', async (req, res) => {
+  try {
+    // Only admin can run this
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Faqat admin bu amalni bajarishi mumkin'
+      });
+    }
+
+    const result = await dailyProductPromotion.runNow();
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Mahsulot promotion muvaffaqiyatli ishga tushirildi'
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: result.message || 'Xatolik yuz berdi'
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server xatolik',
       error: error.message
     });
   }

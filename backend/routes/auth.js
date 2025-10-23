@@ -63,10 +63,13 @@ router.post('/register', async (req, res) => {
 // POST /api/auth/login - Login user
 router.post('/login', async (req, res) => {
   try {
+    console.log('🔐 Login attempt:', req.body.email);
+    
     const { email, password } = req.body;
     
     // Validate input
     if (!email || !password) {
+      console.log('❌ Missing email or password');
       return res.status(400).json({
         success: false,
         message: 'Please provide email and password'
@@ -75,8 +78,10 @@ router.post('/login', async (req, res) => {
     
     // Find user (include password)
     const user = await User.findOne({ email }).select('+password');
+    console.log('👤 User found:', user ? 'Yes' : 'No');
     
     if (!user) {
+      console.log('❌ User not found');
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials'
@@ -85,8 +90,10 @@ router.post('/login', async (req, res) => {
     
     // Check password
     const isPasswordMatch = await user.comparePassword(password);
+    console.log('🔑 Password match:', isPasswordMatch);
     
     if (!isPasswordMatch) {
+      console.log('❌ Password mismatch');
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials'
@@ -95,6 +102,7 @@ router.post('/login', async (req, res) => {
     
     // Generate token
     const token = generateToken(user._id);
+    console.log('✅ Login successful');
     
     res.json({
       success: true,
@@ -109,6 +117,7 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('❌ Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Login failed',

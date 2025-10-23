@@ -28,8 +28,11 @@ import withdrawalRoutes from './routes/withdrawals.js';
 import uploadRoutes from './routes/upload.js';
 import aiRoutes from './routes/ai.js';
 import blogRoutes from './routes/blog.js';
+import seoRoutes from './routes/seo.js';
 import telegramService from './services/telegramService.js';
+import telegramBotService from './services/telegramBotService.js';
 import dailyBlogGenerator from './jobs/dailyBlogGenerator.js';
+import dailyProductPromotion from './jobs/dailyProductPromotion.js';
 
 // Debug: Check if env vars are loaded
 console.log('🔍 Environment Variables Check:');
@@ -41,16 +44,23 @@ console.log('');
 // Connect to database
 connectDB();
 
-// Initialize Telegram bot
+// Initialize Telegram services
 telegramService.initialize();
+telegramBotService.initialize();
 
 // Start daily blog generator cron job
 dailyBlogGenerator.start();
 
+// Start daily product promotion cron job
+dailyProductPromotion.start();
+
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -88,6 +98,7 @@ app.use('/api/withdrawals', withdrawalRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/seo', seoRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import AdminLayout from './components/AdminLayout'
 import SellerLayout from './components/SellerLayout'
+import GoogleAnalytics from './components/GoogleAnalytics'
+import YandexMetrika from './components/YandexMetrika'
 import Home from './pages/Home'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
@@ -33,7 +35,10 @@ import NotFound from './pages/NotFound'
 
 function App() {
   return (
-    <Routes>
+    <>
+      <GoogleAnalytics />
+      <YandexMetrika />
+      <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="products" element={<Products />} />
@@ -75,6 +80,7 @@ function App() {
         <Route path="settings" element={<SellerSettings />} />
       </Route>
     </Routes>
+    </>
   )
 }
 
