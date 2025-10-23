@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="text-white text-lg font-semibold mb-4">OptoMarket.uz</h3>
+            <h3 className="text-white text-lg font-semibold mb-4">OptomMarket.uz</h3>
             <p className="text-sm">
               O'zbekistondagi eng yirik optom savdo platformasi. 
               Ishonchli va qulay xaridlar uchun bizni tanlang.
@@ -20,7 +20,7 @@ const Footer = () => {
             <div className="space-y-2 text-sm">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" />
-                <span>+998 90 123-45-67</span>
+                <span>+998 99 644-84-44</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
@@ -46,7 +46,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-          <p>&copy; 2024 OptoMarket.uz. Barcha huquqlar himoyalangan.</p>
+          <p>&copy; 2024 OptomMarket.uz. Barcha huquqlar himoyalangan.</p>
         </div>
       </div>
     </footer>

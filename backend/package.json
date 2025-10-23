@@ -1,7 +1,7 @@
 {
   "name": "optommarket-backend",
   "version": "1.0.0",
-  "description": "OptoMarket.uz Backend API",
+  "description": "OptomMarket.uz Backend API",
   "main": "server.js",
   "type": "module",
   "scripts": {

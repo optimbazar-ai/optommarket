@@ -115,7 +115,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'OptoMarket.uz Backend API',
+    message: 'OptomMarket.uz Backend API',
     version: '1.0.0',
     status: 'Running',
     documentation: '/api',
@@ -132,7 +132,7 @@ app.get('/', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     success: true,
-    message: 'OptoMarket.uz API',
+    message: 'OptomMarket.uz API',
     version: '1.0.0',
     endpoints: {
       health: '/api/health',

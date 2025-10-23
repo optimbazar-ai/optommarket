@@ -151,7 +151,7 @@ class TelegramBotService {
       const welcomeMessage = `
 🎉 <b>Xush kelibsiz, ${firstName}!</b>
 
-OptoMarket.uz - O'zbekistondagi №1 optom savdo platformasi!
+OptomMarket.uz - O'zbekistondagi №1 optom savdo platformasi!
 
 🛍️ <b>Nima qila olasiz:</b>
 • Mahsulotlarni ko'rish
@@ -255,10 +255,10 @@ Operatorlarimiz tez orada javob berishadi.
       const contactMessage = `
 📞 <b>ALOQA MA'LUMOTLARI</b>
 
-🏢 <b>OptoMarket.uz</b>
+🏢 <b>OptomMarket.uz</b>
 O'zbekistondagi №1 optom savdo platformasi
 
-📱 <b>Telefon:</b> +998 90 123 45 67
+📱 <b>Telefon:</b> +998 99 644 84 44
 📧 <b>Email:</b> info@optommarket.uz
 🌐 <b>Sayt:</b> https://optommarket.uz
 
@@ -270,7 +270,7 @@ Bunyodkor ko'chasi, 1-uy
 Dushanba-Shanba: 09:00 - 18:00
 Yakshanba: Dam olish
 
-💬 <b>Telegram:</b> @OptoMarketUz
+💬 <b>Telegram:</b> @OptomMarketUz
 📱 <b>Instagram:</b> @optommarket.uz
       `.trim();
 
@@ -317,7 +317,7 @@ Yakshanba: Dam olish
         const welcomeMessage = `
 🎉 <b>Bosh Menyu</b>
 
-OptoMarket.uz - O'zbekistondagi №1 optom savdo platformasi!
+OptomMarket.uz - O'zbekistondagi №1 optom savdo platformasi!
 
 👇 <b>Quyidagi tugmalardan birini tanlang:</b>
         `.trim();
@@ -362,10 +362,10 @@ OptoMarket.uz - O'zbekistondagi №1 optom savdo platformasi!
         const contactMessage = `
 📞 <b>ALOQA MA'LUMOTLARI</b>
 
-🏢 <b>OptoMarket.uz</b>
+🏢 <b>OptomMarket.uz</b>
 O'zbekistondagi №1 optom savdo platformasi
 
-📱 <b>Telefon:</b> +998 90 123 45 67
+📱 <b>Telefon:</b> +998 99 644 84 44
 📧 <b>Email:</b> info@optommarket.uz
 🌐 <b>Sayt:</b> https://optommarket.uz
 
@@ -377,7 +377,7 @@ Bunyodkor ko'chasi, 1-uy
 Dushanba-Shanba: 09:00 - 18:00
 Yakshanba: Dam olish
 
-💬 <b>Telegram:</b> @OptoMarketUz
+💬 <b>Telegram:</b> @OptomMarketUz
 📱 <b>Instagram:</b> @optommarket.uz
         `.trim();
 
