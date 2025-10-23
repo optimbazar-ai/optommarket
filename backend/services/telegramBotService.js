@@ -58,8 +58,12 @@ class TelegramBotService {
       this.bot.on('polling_error', (error) => {
         // 409 Conflict - boshqa instance ishlayapti
         if (error.code === 'ETELEGRAM' && error.message.includes('409')) {
-          console.warn('⚠️ Telegram bot: Boshqa instance topildi, polling to\'xtatilmoqda...');
-          this.stopPolling();
+          console.warn('⚠️ Telegram bot: 409 Conflict - 30 soniyadan keyin qayta urinaman...');
+          // Polling'ni to'xtatish va qayta ishga tushirish
+          setTimeout(() => {
+            console.log('🔄 Telegram bot qayta ulanmoqda...');
+            this.restartPolling();
+          }, 30000); // 30 soniya kutish
         } else {
           console.error('error: [polling_error]', JSON.stringify({
             code: error.code,
@@ -87,6 +91,54 @@ class TelegramBotService {
       } catch (error) {
         console.error('❌ Polling to\'xtatishda xatolik:', error.message);
       }
+    }
+  }
+
+  // Polling qayta ishga tushirish metodi
+  async restartPolling() {
+    try {
+      // Avval to'xtatish
+      if (this.bot) {
+        await this.bot.stopPolling();
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+
+      // Yangi bot instance yaratish
+      const token = process.env.TELEGRAM_BOT_TOKEN;
+      this.bot = new TelegramBot(token, { 
+        polling: {
+          interval: 1000,
+          autoStart: true,
+          params: {
+            timeout: 10
+          }
+        }
+      });
+
+      // Error handler qayta qo'shish
+      this.bot.on('polling_error', (error) => {
+        if (error.code === 'ETELEGRAM' && error.message.includes('409')) {
+          console.warn('⚠️ Telegram bot: 409 Conflict - 30 soniyadan keyin qayta urinaman...');
+          setTimeout(() => {
+            console.log('🔄 Telegram bot qayta ulanmoqda...');
+            this.restartPolling();
+          }, 30000);
+        } else {
+          console.error('error: [polling_error]', JSON.stringify({
+            code: error.code,
+            message: error.message
+          }));
+        }
+      });
+
+      this.initialized = true;
+      this.setupCommands();
+      this.setupCallbackHandlers();
+      console.log('✅ Telegram bot qayta ishga tushdi');
+    } catch (error) {
+      console.error('❌ Telegram bot restart error:', error.message);
+      // Yana urinish
+      setTimeout(() => this.restartPolling(), 60000); // 1 daqiqadan keyin
     }
   }
 
