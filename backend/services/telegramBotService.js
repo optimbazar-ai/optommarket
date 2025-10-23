@@ -20,17 +20,11 @@ class TelegramBotService {
       return;
     }
 
-    // Faqat production da bot ishlasin (localhost da emas)
-    // BACKEND_URL orqali production ni aniqlash
-    const backendUrl = process.env.BACKEND_URL || '';
-    const isLocalhost = backendUrl.includes('localhost') || backendUrl.includes('127.0.0.1');
-    
-    if (isLocalhost) {
-      console.log('ℹ️ Telegram bot localhost da ishlamaydi');
-      return;
-    }
-    
-    console.log('🚀 Telegram bot production da ishga tushmoqda...');
+    // PRODUCTION DA TELEGRAM BOT POLLING O'CHIRILGAN
+    // Sabab: Infinite loop muammosi va server overload
+    // Webhook yoki boshqa yechim kerak
+    console.log('ℹ️ Telegram bot polling o\'chirilgan (production issue)');
+    return;
 
     try {
       // Avval webhook va pending updates ni tozalash
