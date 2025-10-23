@@ -191,14 +191,16 @@ const Login = () => {
                 </p>
               </div>
 
-              {/* Test Credentials */}
-              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
-                <p className="font-semibold text-blue-900 dark:text-blue-300 mb-2 text-sm">🔑 Test uchun hisoblar:</p>
-                <div className="space-y-1 text-xs">
-                  <p className="text-blue-700 dark:text-blue-400"><strong>Admin:</strong> admin@optommarket.uz / admin123</p>
-                  <p className="text-blue-700 dark:text-blue-400"><strong>Seller:</strong> seller@optommarket.uz / seller123</p>
+              {/* Test Credentials - Only in Development */}
+              {import.meta.env.DEV && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
+                  <p className="font-semibold text-blue-900 dark:text-blue-300 mb-2 text-sm">🔑 Test uchun hisoblar:</p>
+                  <div className="space-y-1 text-xs">
+                    <p className="text-blue-700 dark:text-blue-400"><strong>Admin:</strong> admin@optommarket.uz / admin123</p>
+                    <p className="text-blue-700 dark:text-blue-400"><strong>Seller:</strong> seller@optommarket.uz / seller123</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

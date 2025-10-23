@@ -27,14 +27,25 @@ router.post('/register', async (req, res) => {
     }
     
     // Create user
-    const user = await User.create({
+    // Create user with seller approval status
+    const userData = {
       name,
       email,
       password,
       phone,
       role: role || 'customer',
       companyName
-    });
+    };
+    
+    // If seller, set verification status to pending
+    if (role === 'seller') {
+      userData.sellerInfo = {
+        verificationStatus: 'pending',
+        verified: false
+      };
+    }
+    
+    const user = await User.create(userData);
     
     // Generate token
     const token = generateToken(user._id);
@@ -97,6 +108,17 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials'
+      });
+    }
+    
+    // Check seller verification status
+    if (user.role === 'seller' && user.sellerInfo?.verificationStatus !== 'approved') {
+      console.log('⏳ Seller not approved yet');
+      return res.status(403).json({
+        success: false,
+        message: user.sellerInfo?.verificationStatus === 'rejected' 
+          ? 'Hisobingiz rad etilgan. Admin bilan bog\'laning.'
+          : 'Hisobingiz hali tasdiqlanmagan. Admin tasdiqlashini kuting.'
       });
     }
     
