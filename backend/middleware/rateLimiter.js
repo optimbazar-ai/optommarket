@@ -15,10 +15,10 @@ export const apiLimiter = rateLimit({
   skip: (req) => req.path.startsWith('/uploads'),
 });
 
-// Stricter rate limiter for authentication routes - 5 requests per 15 minutes
+// Stricter rate limiter for authentication routes - 50 requests per 15 minutes (temporary increased for testing)
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 daqiqa
-  max: 5, // Har bir IP uchun maksimal 5 ta login/register
+  max: 50, // Har bir IP uchun maksimal 50 ta login/register (test uchun ko'paytirildi)
   message: {
     success: false,
     message: 'Juda ko\'p login urinish. Xavfsizlik uchun 15 daqiqa kutishingiz kerak.',
