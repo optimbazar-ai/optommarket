@@ -29,6 +29,7 @@ import uploadRoutes from './routes/upload.js';
 import aiRoutes from './routes/ai.js';
 import blogRoutes from './routes/blog.js';
 import seoRoutes from './routes/seo.js';
+import testRoutes from './routes/test.js';
 import telegramService from './services/telegramService.js';
 import telegramBotService from './services/telegramBotService.js';
 import dailyBlogGenerator from './jobs/dailyBlogGenerator.js';
@@ -103,6 +104,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/seo', seoRoutes);
+app.use('/api/test', testRoutes);
 
 // 404 handler
 app.use((req, res) => {
