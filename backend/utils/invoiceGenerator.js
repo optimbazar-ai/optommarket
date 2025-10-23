@@ -173,7 +173,7 @@ export const generateInvoiceHTML = (order) => {
   <div class="invoice">
     <!-- Header -->
     <div class="header">
-      <h1>🛒 OptoMarket.uz</h1>
+      <h1>🛒 OptomMarket.uz</h1>
       <p>O'zbekistondagi eng yirik optom savdo platformasi</p>
       <p>📞 +998 90 123-45-67 | 📧 info@optommarket.uz</p>
     </div>
@@ -257,7 +257,7 @@ export const generateInvoiceHTML = (order) => {
         Savollar bo'lsa: +998 90 123-45-67 | info@optommarket.uz
       </p>
       <p style="margin-top: 10px; font-size: 10px;">
-        © ${new Date().getFullYear()} OptoMarket.uz - Barcha huquqlar himoyalangan
+        © ${new Date().getFullYear()} OptomMarket.uz - Barcha huquqlar himoyalangan
       </p>
     </div>
   </div>

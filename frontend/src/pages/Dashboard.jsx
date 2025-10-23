@@ -62,7 +62,7 @@ const Dashboard = () => {
           <div className="bg-gradient-to-r from-primary-600 to-primary-800 rounded-lg p-6 text-white">
             <h3 className="text-2xl font-bold mb-2">Xush kelibsiz, {user.name}!</h3>
             <p className="text-primary-100">
-              OptoMarket.uz platformasidan foydalanganingiz uchun rahmat.
+              OptomMarket.uz platformasidan foydalanganingiz uchun rahmat.
             </p>
           </div>
 

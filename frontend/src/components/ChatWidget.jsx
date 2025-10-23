@@ -7,7 +7,7 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     sender: 'model',
-    text: 'Salom! Men OptoMarket.uz yordamchi chatbotiman. Sizga qanday yordam bera olaman? 😊'
+    text: 'Salom! Men OptomMarket.uz yordamchi chatbotiman. Sizga qanday yordam bera olaman? 😊'
   }
 ]
 
@@ -17,7 +17,7 @@ const ChatWidget = () => {
   const [chatHistory, setChatHistory] = useState([
     {
       role: 'model',
-      parts: [{ text: 'Salom! Men OptoMarket.uz yordamchi chatbotiman.' }]
+      parts: [{ text: 'Salom! Men OptomMarket.uz yordamchi chatbotiman.' }]
     }
   ])
   const [inputValue, setInputValue] = useState('')
@@ -270,7 +270,7 @@ const ChatWidget = () => {
                 <MessageCircle className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-semibold">OptoMarket Yordamchi</h3>
+                <h3 className="font-semibold">OptomMarket Yordamchi</h3>
                 <p className="text-xs text-white/80">Onlayn</p>
               </div>
             </div>

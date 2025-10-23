@@ -42,8 +42,8 @@ const Categories = () => {
   return (
     <>
       <SEO 
-        title="Kategoriyalar - OptoMarket.uz"
-        description="Barcha mahsulot kategoriyalari - OptoMarket.uz"
+        title="Kategoriyalar - OptomMarket.uz"
+        description="Barcha mahsulot kategoriyalari - OptomMarket.uz"
         keywords="kategoriyalar, mahsulotlar, optom savdo"
       />
       

@@ -93,7 +93,7 @@ const BlogDetail = () => {
   return (
     <>
       <SEO 
-        title={`${post.title} - OptoMarket.uz Blog`}
+        title={`${post.title} - OptomMarket.uz Blog`}
         description={post.excerpt || post.content.substring(0, 160)}
         keywords={post.tags?.join(', ') || 'blog, maqola'}
         image={post.image}

@@ -20,7 +20,7 @@ const resetAdmin = async () => {
       password: 'admin123',
       phone: '+998901234567',
       role: 'admin',
-      companyName: 'OptoMarket Administration'
+      companyName: 'OptomMarket Administration'
     });
 
     console.log('✅ Admin user reset successfully!');

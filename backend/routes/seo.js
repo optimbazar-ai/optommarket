@@ -160,7 +160,7 @@ ${posts.map(post => `  <url>
     <priority>0.6</priority>
     <news:news>
       <news:publication>
-        <news:name>OptoMarket.uz</news:name>
+        <news:name>OptomMarket.uz</news:name>
         <news:language>uz</news:language>
       </news:publication>
       <news:publication_date>${post.createdAt.toISOString()}</news:publication_date>
@@ -203,7 +203,7 @@ router.get('/structured-data/:type/:id', async (req, res) => {
           : [],
         "brand": {
           "@type": "Brand",
-          "name": product.brand || product.createdBy?.companyName || "OptoMarket.uz"
+          "name": product.brand || product.createdBy?.companyName || "OptomMarket.uz"
         },
         "offers": {
           "@type": "Offer",
@@ -214,7 +214,7 @@ router.get('/structured-data/:type/:id', async (req, res) => {
           "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
           "seller": {
             "@type": "Organization",
-            "name": product.createdBy?.companyName || "OptoMarket.uz"
+            "name": product.createdBy?.companyName || "OptomMarket.uz"
           }
         },
         "aggregateRating": {
@@ -238,11 +238,11 @@ router.get('/structured-data/:type/:id', async (req, res) => {
         "image": post.image || `${baseUrl}/logo.svg`,
         "author": {
           "@type": "Person",
-          "name": post.author?.name || "OptoMarket.uz"
+          "name": post.author?.name || "OptomMarket.uz"
         },
         "publisher": {
           "@type": "Organization",
-          "name": "OptoMarket.uz",
+          "name": "OptomMarket.uz",
           "logo": {
             "@type": "ImageObject",
             "url": `${baseUrl}/logo.svg`

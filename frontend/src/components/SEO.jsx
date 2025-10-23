@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
 const SEO = ({ 
-  title = 'OptoMarket.uz - O\'zbekistondagi eng yirik optom savdo platformasi',
+  title = 'OptomMarket.uz - O\'zbekistondagi eng yirik optom savdo platformasi',
   description = '10,000+ mahsulotlar, raqobatbardosh narxlar va tez yetkazib berish. Biznesingiz uchun eng yaxshi optom savdo platformasi.',
   keywords = 'optom savdo, wholesale, uzbekistan, mahsulotlar, biznes, optom narxlar, optom bozor, ulgurji savdo, optom market, online optom',
   image = 'https://optommarket.uz/og-image.jpg',
@@ -9,7 +9,7 @@ const SEO = ({
   type = 'website',
   publishedTime,
   modifiedTime,
-  author = 'OptoMarket.uz',
+  author = 'OptomMarket.uz',
   structuredData,
   noindex = false
 }) => {
@@ -17,7 +17,7 @@ const SEO = ({
   const defaultStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "OptoMarket.uz",
+    "name": "OptomMarket.uz",
     "url": "https://optommarket.uz",
     "description": description,
     "potentialAction": {
@@ -27,7 +27,7 @@ const SEO = ({
     },
     "publisher": {
       "@type": "Organization",
-      "name": "OptoMarket.uz",
+      "name": "OptomMarket.uz",
       "logo": {
         "@type": "ImageObject",
         "url": "https://optommarket.uz/logo.svg"
@@ -69,7 +69,7 @@ const SEO = ({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:locale" content="uz_UZ" />
-      <meta property="og:site_name" content="OptoMarket.uz" />
+      <meta property="og:site_name" content="OptomMarket.uz" />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
       {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
       
@@ -79,8 +79,8 @@ const SEO = ({
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
-      <meta name="twitter:site" content="@OptoMarketUz" />
-      <meta name="twitter:creator" content="@OptoMarketUz" />
+      <meta name="twitter:site" content="@OptomMarketUz" />
+      <meta name="twitter:creator" content="@OptomMarketUz" />
       
       {/* Additional SEO */}
       <meta name="revisit-after" content="3 days" />

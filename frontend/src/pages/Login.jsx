@@ -55,7 +55,7 @@ const Login = () => {
                     <ShoppingCart className="w-8 h-8 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-text">OptoMarket</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-dark-text">OptomMarket</h1>
                     <p className="text-gray-600 dark:text-dark-muted">Optom savdo platformasi</p>
                   </div>
                 </div>

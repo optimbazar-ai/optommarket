@@ -26,7 +26,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <ShoppingCart className="w-8 h-8 text-primary-600" />
-            <span className="text-xl font-bold text-primary-600 dark:text-primary-400">OptoMarket.uz</span>
+            <span className="text-xl font-bold text-primary-600 dark:text-primary-400">OptomMarket.uz</span>
           </Link>
 
           {/* Navigation Links */}

@@ -91,7 +91,7 @@ const InstallPWA = () => {
 
             <div className="flex-1">
               <h3 className="font-bold text-lg mb-1">
-                OptoMarket App'ni O'rnating
+                OptomMarket App'ni O'rnating
               </h3>
               <p className="text-sm text-blue-100 mb-3">
                 Tezroq kirish va offline ishlash uchun ilovani telefon/kompyuteringizga o'rnating

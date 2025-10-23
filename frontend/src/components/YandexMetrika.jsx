@@ -77,7 +77,7 @@ export const ymTrackProductView = (product) => {
           "id": product._id,
           "name": product.name,
           "price": product.price,
-          "brand": product.brand || "OptoMarket",
+          "brand": product.brand || "OptomMarket",
           "category": product.category?.name
         }]
       }
@@ -95,7 +95,7 @@ export const ymTrackAddToCart = (product, quantity = 1) => {
           "id": product._id,
           "name": product.name,
           "price": product.price,
-          "brand": product.brand || "OptoMarket",
+          "brand": product.brand || "OptomMarket",
           "category": product.category?.name,
           "quantity": quantity
         }]

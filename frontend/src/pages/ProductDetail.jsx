@@ -84,7 +84,7 @@ const ProductDetail = () => {
   return (
     <>
       <SEO 
-        title={`${product?.name || 'Mahsulot'} - OptoMarket.uz`}
+        title={`${product?.name || 'Mahsulot'} - OptomMarket.uz`}
         description={product?.description || 'Mahsulot tafsilotlari'}
         keywords={`${product?.name}, ${product?.category?.name}, optom savdo, uzbekistan`}
         url={`https://optommarket.uz/products/${id}`}

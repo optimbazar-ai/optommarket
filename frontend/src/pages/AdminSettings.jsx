@@ -7,7 +7,7 @@ const AdminSettings = () => {
   const [message, setMessage] = useState('')
 
   const [storeSettings, setStoreSettings] = useState({
-    storeName: 'OptoMarket.uz',
+    storeName: 'OptomMarket.uz',
     storeEmail: 'info@optommarket.uz',
     storePhone: '+998901234567',
     storeAddress: 'Toshkent, O\'zbekiston',

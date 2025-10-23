@@ -47,7 +47,7 @@ const SellerLayout = () => {
                   <Store className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-white">OptoMarket</h1>
+                  <h1 className="text-lg font-bold text-white">OptomMarket</h1>
                   <p className="text-xs text-blue-100">Sotuvchi Paneli</p>
                 </div>
               </Link>

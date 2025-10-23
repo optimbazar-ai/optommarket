@@ -37,7 +37,7 @@ const Home = () => {
   return (
     <>
       <SEO 
-        title="OptoMarket.uz - O'zbekistondagi eng yirik optom savdo platformasi"
+        title="OptomMarket.uz - O'zbekistondagi eng yirik optom savdo platformasi"
         description="10,000+ mahsulotlar, raqobatbardosh narxlar va tez yetkazib berish. Biznesingiz uchun eng yaxshi optom savdo platformasi."
         keywords="optom savdo, wholesale, uzbekistan, mahsulotlar, biznes, optom narxlar, optom bozor"
         url="https://optommarket.uz"

@@ -112,7 +112,7 @@ class BlogGeneratorService {
 
   async generateContent(topic, category) {
     const prompt = `
-Optom savdo platformasi OptoMarket.uz uchun "${topic}" mavzusida professional blog maqola yozing.
+Optom savdo platformasi OptomMarket.uz uchun "${topic}" mavzusida professional blog maqola yozing.
 
 Talablar:
 - Maqola o'zbek tilida bo'lishi kerak

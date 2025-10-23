@@ -2,7 +2,7 @@ import { Facebook, MessageCircle, Send, Link2, Check } from 'lucide-react'
 import { useState } from 'react'
 
 const ShareButtons = ({ 
-  title = 'OptoMarket.uz', 
+  title = 'OptomMarket.uz', 
   description = 'Eng yaxshi optom savdo platformasi',
   url = window.location.href 
 }) => {

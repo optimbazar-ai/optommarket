@@ -30,7 +30,7 @@ const Blog = () => {
   return (
     <>
       <SEO 
-        title="Blog - OptoMarket.uz"
+        title="Blog - OptomMarket.uz"
         description="Biznes va optom savdo bo'yicha foydali maqolalar, yangiliklar va maslahatlar"
         keywords="blog, yangiliklar, maqolalar, biznes, optom savdo"
       />

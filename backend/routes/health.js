@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     database: dbStatus,
     dbName: dbName,
     timestamp: new Date().toISOString(),
-    service: 'OptoMarket API',
+    service: 'OptomMarket API',
     version: '1.0.0'
   });
 });
