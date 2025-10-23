@@ -47,7 +47,7 @@ connectDB();
 
 // Initialize Telegram services
 telegramService.initialize();
-telegramBotService.initialize();
+// telegramBotService.initialize(); // Temporarily disabled due to 409 conflict
 
 // Start daily blog generator cron job
 dailyBlogGenerator.start();
