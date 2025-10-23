@@ -21,10 +21,16 @@ class TelegramBotService {
     }
 
     // Faqat production da bot ishlasin (localhost da emas)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('ℹ️ Telegram bot faqat production da ishga tushadi');
+    // BACKEND_URL orqali production ni aniqlash
+    const backendUrl = process.env.BACKEND_URL || '';
+    const isLocalhost = backendUrl.includes('localhost') || backendUrl.includes('127.0.0.1');
+    
+    if (isLocalhost) {
+      console.log('ℹ️ Telegram bot localhost da ishlamaydi');
       return;
     }
+    
+    console.log('🚀 Telegram bot production da ishga tushmoqda...');
 
     try {
       this.bot = new TelegramBot(token, { polling: true });
