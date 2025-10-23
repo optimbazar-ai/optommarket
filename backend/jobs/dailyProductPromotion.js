@@ -202,7 +202,7 @@ Misol: "🔥 Ajoyib sifat va arzon narx! Optom xaridlarda maxsus chegirmalar. Bu
       
       const link = `\n\n🛒 <a href="${process.env.FRONTEND_URL || 'https://optommarket.uz'}/products/${product._id}">Buyurtma berish →</a>`;
       
-      const hashtags = `\n\n#OptoMarket #OptomSavdo #Uzbekistan`;
+      const hashtags = `\n\n#OptomMarket #OptomSavdo #Uzbekistan`;
       
       const message = `${title}${marketing}${description}${price}${wholesalePrice}${minOrder}${stock}${category}${seller}${link}${hashtags}`;
 
@@ -249,7 +249,7 @@ Misol: "🔥 Ajoyib sifat va arzon narx! Optom xaridlarda maxsus chegirmalar. Bu
 🆕 Bugun qo'shilgan: ${newToday} ta
 📦 Jami mahsulotlar: ${totalProducts} ta
 
-🌐 <a href="${process.env.FRONTEND_URL || 'https://optommarket.uz'}">OptoMarket.uz</a> - Ishonchli optom savdo platformasi!
+🌐 <a href="${process.env.FRONTEND_URL || 'https://optommarket.uz'}">OptomMarket.uz</a> - Ishonchli optom savdo platformasi!
       `.trim();
 
       await telegramService.sendMessage(statsMessage);
