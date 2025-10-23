@@ -165,7 +165,7 @@ const Cart = () => {
                     Yetkazib berish:
                   </span>
                   <span className={getCartTotal() >= 3000000 ? "text-green-600 dark:text-green-400 font-bold" : "font-semibold"}>
-                    {getCartTotal() >= 3000000 ? 'BEPUL' : 'Checkout\'da hisoblanadi'}
+                    {getCartTotal() >= 3000000 ? 'BEPUL' : 'Buyurtmani tasdiqlash\'da hisoblanadi'}
                   </span>
                 </div>
                 <div className="border-t border-gray-200 dark:border-dark-border pt-3 sm:pt-4 flex justify-between text-xl sm:text-2xl font-bold">
