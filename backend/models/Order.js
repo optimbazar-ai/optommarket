@@ -120,7 +120,7 @@ orderSchema.pre('save', function(next) {
 });
 
 // Indexes for performance
-orderSchema.index({ orderNumber: 1 }); // Order lookup (unique already creates index)
+// Note: orderNumber index already created by 'unique: true'
 orderSchema.index({ user: 1 }); // User's orders
 orderSchema.index({ orderStatus: 1 }); // Status filtering
 orderSchema.index({ paymentStatus: 1 }); // Payment filtering

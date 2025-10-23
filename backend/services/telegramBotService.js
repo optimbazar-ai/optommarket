@@ -54,12 +54,39 @@ class TelegramBotService {
         }
       });
       
+      // Polling error handler
+      this.bot.on('polling_error', (error) => {
+        // 409 Conflict - boshqa instance ishlayapti
+        if (error.code === 'ETELEGRAM' && error.message.includes('409')) {
+          console.warn('⚠️ Telegram bot: Boshqa instance topildi, polling to\'xtatilmoqda...');
+          this.stopPolling();
+        } else {
+          console.error('error: [polling_error]', JSON.stringify({
+            code: error.code,
+            message: error.message
+          }));
+        }
+      });
+      
       this.initialized = true;
       this.setupCommands();
       this.setupCallbackHandlers();
       console.log('✅ Telegram interactive bot ishga tushdi');
     } catch (error) {
       console.error('❌ Telegram bot initialization error:', error);
+    }
+  }
+
+  // Polling to'xtatish metodi
+  stopPolling() {
+    if (this.bot && this.initialized) {
+      try {
+        this.bot.stopPolling();
+        this.initialized = false;
+        console.log('🛑 Telegram bot polling to\'xtatildi');
+      } catch (error) {
+        console.error('❌ Polling to\'xtatishda xatolik:', error.message);
+      }
     }
   }
 

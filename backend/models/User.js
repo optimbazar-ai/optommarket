@@ -102,7 +102,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 };
 
 // Indexes for performance
-userSchema.index({ email: 1 }); // Login queries (unique already creates index)
+// Note: email index already created by 'unique: true'
 userSchema.index({ role: 1 }); // Role-based queries
 userSchema.index({ 'sellerInfo.verified': 1 }); // Verified sellers
 userSchema.index({ 'sellerInfo.verificationStatus': 1 }); // Seller approval
