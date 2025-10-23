@@ -95,7 +95,7 @@ const SEO = ({
       <meta name="yandex-verification" content="" />
       
       {/* Google */}
-      <meta name="google-site-verification" content="" />
+      <meta name="google-site-verification" content="CbnMP1CwpktX-t6UyP1P4P2ZsIwuKy7hNYR8OVIrtRw" />
       
       {/* Structured Data (JSON-LD) */}
       <script type="application/ld+json">

@@ -1,4 +1,4 @@
-# OptoMarket.uz - O'zbekistondagi №1 optom savdo platformasi
+# OptomMarket.uz - O'zbekistondagi №1 optom savdo platformasi
 # https://optommarket.uz
 
 # Google Bot
