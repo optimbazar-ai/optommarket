@@ -24,7 +24,7 @@ class GeminiService {
 
     this.ensureClient();
 
-    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
+    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
     this.textModel = this.client.getGenerativeModel({ model: modelName });
 
     this.textModelInitialized = true;
@@ -36,7 +36,7 @@ class GeminiService {
 
     this.ensureClient();
 
-    const ttsModelName = process.env.GEMINI_TTS_MODEL || 'gemini-2.5-flash-preview-tts';
+    const ttsModelName = process.env.GEMINI_TTS_MODEL || 'gemini-1.5-flash';
     this.ttsModel = this.client.getGenerativeModel({ model: ttsModelName });
 
     this.ttsModelInitialized = true;
