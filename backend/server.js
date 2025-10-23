@@ -96,7 +96,9 @@ app.use(cors({
   origin: [
     'http://localhost:3000', 
     'http://localhost:5173',
-    'https://optommarket.netlify.app'
+    'https://optommarket.netlify.app',
+    'https://optommarket.vercel.app',
+    /^https:\/\/optommarket-.*\.vercel\.app$/
   ],
   credentials: true
 }));
