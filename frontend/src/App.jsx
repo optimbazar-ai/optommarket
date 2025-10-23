@@ -9,6 +9,7 @@ import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Categories from './pages/Categories'
 import Blog from './pages/Blog'
+import BlogDetail from './pages/BlogDetail'
 import Chatbot from './pages/Chatbot'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
@@ -45,7 +46,7 @@ function App() {
         <Route path="products/:id" element={<ProductDetail />} />
         <Route path="categories" element={<Categories />} />
         <Route path="blog" element={<Blog />} />
-        <Route path="blog/:slug" element={<Blog />} />
+        <Route path="blog/:slug" element={<BlogDetail />} />
         <Route path="chatbot" element={<Chatbot />} />
         <Route path="cart" element={<Cart />} />
         <Route path="checkout" element={<Checkout />} />
