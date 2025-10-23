@@ -20,6 +20,12 @@ class TelegramBotService {
       return;
     }
 
+    // Faqat production da bot ishlasin (localhost da emas)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('ℹ️ Telegram bot faqat production da ishga tushadi');
+      return;
+    }
+
     try {
       this.bot = new TelegramBot(token, { polling: true });
       this.initialized = true;
