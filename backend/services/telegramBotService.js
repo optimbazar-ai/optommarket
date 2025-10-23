@@ -323,8 +323,7 @@ Yakshanba: Dam olish
       console.log('🔍 Telegram bot: Mahsulotlar qidirilmoqda...');
 
       const products = await Product.find({ 
-        active: true, 
-        approvalStatus: 'approved',
+        active: true,
         stock: { $gt: 0 }
       })
         .populate('category', 'name')
@@ -333,28 +332,15 @@ Yakshanba: Dam olish
         .limit(limit);
 
       const total = await Product.countDocuments({ 
-        active: true, 
-        approvalStatus: 'approved',
+        active: true,
         stock: { $gt: 0 }
       });
 
       console.log(`📊 Topilgan mahsulotlar: ${products.length} / ${total}`);
 
       if (products.length === 0) {
-        console.log('❌ Approved mahsulotlar yo\'q');
-
-        // Debug: barcha mahsulotlarni sanash
-        const allProducts = await Product.countDocuments();
-        const pendingProducts = await Product.countDocuments({ approvalStatus: 'pending' });
-
-        await this.bot.sendMessage(chatId, 
-          `❌ Tasdiqlangan mahsulotlar yo'q\n\n` +
-          `📊 Statistika:\n` +
-          `• Jami: ${allProducts} ta\n` +
-          `• Pending: ${pendingProducts} ta\n` +
-          `• Approved: ${total} ta\n\n` +
-          `⚠️ Admin mahsulotlarni tasdiqlashi kerak`
-        );
+        console.log('❌ Mahsulotlar yo\'q');
+        await this.bot.sendMessage(chatId, '❌ Hozircha mahsulotlar yo\'q');
         return;
       }
 
@@ -437,7 +423,6 @@ Kategoriyani tanlang:
       const products = await Product.find({ 
         category: categoryId,
         active: true,
-        approvalStatus: 'approved',
         stock: { $gt: 0 }
       }).limit(10);
 
