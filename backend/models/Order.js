@@ -119,6 +119,15 @@ orderSchema.pre('save', function(next) {
   next();
 });
 
+// Indexes for performance
+orderSchema.index({ orderNumber: 1 }); // Order lookup (unique already creates index)
+orderSchema.index({ user: 1 }); // User's orders
+orderSchema.index({ orderStatus: 1 }); // Status filtering
+orderSchema.index({ paymentStatus: 1 }); // Payment filtering
+orderSchema.index({ createdAt: -1 }); // Recent orders (descending)
+orderSchema.index({ user: 1, createdAt: -1 }); // User's recent orders
+orderSchema.index({ orderStatus: 1, paymentStatus: 1 }); // Combined status queries
+
 const Order = mongoose.model('Order', orderSchema);
 
 export default Order;

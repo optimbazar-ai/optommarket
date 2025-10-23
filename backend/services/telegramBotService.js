@@ -11,7 +11,7 @@ class TelegramBotService {
     this.userSessions = new Map(); // Store user conversation state
   }
 
-  initialize() {
+  async initialize() {
     if (this.initialized) return;
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -33,22 +33,25 @@ class TelegramBotService {
     console.log('🚀 Telegram bot production da ishga tushmoqda...');
 
     try {
-      // Polling o'rniga webhook ishlatish (conflict oldini olish)
+      // Avval webhook va pending updates ni tozalash
+      const tempBot = new TelegramBot(token, { polling: false });
+      
+      await tempBot.deleteWebHook({ drop_pending_updates: true })
+        .then(() => console.log('🗑️ Webhook va pending updates tozalandi'))
+        .catch(err => console.log('⚠️ Webhook tozalash:', err.message));
+      
+      // 2 soniya kutish
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Endi polling ni ishga tushirish
       this.bot = new TelegramBot(token, { 
         polling: {
-          interval: 2000,
+          interval: 1000,
           autoStart: true,
           params: {
             timeout: 10
           }
         }
-      });
-      
-      // Eski webhook ni o'chirish
-      this.bot.deleteWebHook().then(() => {
-        console.log('🗑️ Eski webhook o\'chirildi');
-      }).catch(err => {
-        console.log('⚠️ Webhook o\'chirish xatolik:', err.message);
       });
       
       this.initialized = true;

@@ -1,6 +1,7 @@
 import express from 'express';
 import Product from '../models/Product.js';
 import { protect } from '../middleware/auth.js';
+import { productCache } from '../middleware/cache.js';
 
 const router = express.Router();
 
@@ -48,8 +49,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/products/:id - Get single product
-router.get('/:id', async (req, res) => {
+// GET /api/products/:id - Get single product (with cache)
+router.get('/:id', productCache, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
       .populate('category', 'name slug description');

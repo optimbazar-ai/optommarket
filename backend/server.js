@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import compression from 'compression';
+import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
@@ -10,6 +12,21 @@ const __dirname = path.dirname(__filename);
 
 // Middleware
 import adminAuth from './middleware/adminAuth.js';
+import { 
+  apiLimiter, 
+  authLimiter, 
+  paymentLimiter, 
+  adminLimiter, 
+  searchLimiter 
+} from './middleware/rateLimiter.js';
+import { 
+  productsCache, 
+  productCache, 
+  categoriesCache, 
+  blogCache,
+  clearCache,
+  getCacheStats 
+} from './middleware/cache.js';
 
 // Load env vars FIRST!
 dotenv.config();
@@ -57,7 +74,24 @@ dailyProductPromotion.start();
 
 const app = express();
 
-// Middleware
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable for API
+  crossOriginEmbedderPolicy: false
+}));
+
+// Compression middleware - Ma'lumotlarni siqish
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  level: 6 // Compression level (0-9, 6 is optimal)
+}));
+
+// CORS middleware
 app.use(cors({
   origin: [
     'http://localhost:3000', 
@@ -66,8 +100,13 @@ app.use(cors({
   ],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Rate limiting - Barcha API route'lar uchun
+app.use('/api/', apiLimiter);
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -106,22 +145,48 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Routes
+// Routes with specific rate limiting and caching
 app.use('/api/health', healthRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/categories', categoryRoutes);
+app.use('/api/products', searchLimiter, productRoutes); // Search limiter for products
+app.use('/api/auth', authLimiter, authRoutes); // Strict limiter for auth
+app.use('/api/categories', categoriesCache, categoryRoutes); // Cache categories
 app.use('/api/orders', orderRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/admin', adminAuth, adminRoutes);
+app.use('/api/payments', paymentLimiter, paymentRoutes); // Strict limiter for payments
+app.use('/api/admin', adminAuth, adminLimiter, adminRoutes); // Admin limiter
 app.use('/api/promo-codes', promoCodeRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/withdrawals', withdrawalRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/ai', aiRoutes);
-app.use('/api/blog', blogRoutes);
+app.use('/api/blog', blogCache, blogRoutes); // Cache blog posts
 app.use('/api/seo', seoRoutes);
 app.use('/api/test', testRoutes);
+
+// Cache management endpoint (admin only)
+app.post('/api/admin/cache/clear', adminAuth, (req, res) => {
+  try {
+    const { type } = req.body;
+    if (type) {
+      clearCache(type);
+      res.json({ success: true, message: `Cache cleared: ${type}` });
+    } else {
+      clearCache();
+      res.json({ success: true, message: 'All cache cleared' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Cache clear failed' });
+  }
+});
+
+// Cache stats endpoint (admin only)
+app.get('/api/admin/cache/stats', adminAuth, (req, res) => {
+  try {
+    const stats = getCacheStats();
+    res.json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get cache stats' });
+  }
+});
 
 // 404 handler
 app.use((req, res) => {
