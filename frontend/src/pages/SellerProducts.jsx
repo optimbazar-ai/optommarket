@@ -165,6 +165,14 @@ const SellerProducts = () => {
     try {
       const categoryName = categories.find(c => c._id === formData.category)?.name || ''
       
+      console.log('🤖 AI Request:', {
+        productName: formData.name,
+        category: categoryName,
+        brand: formData.brand,
+        price: formData.price,
+        type: type
+      });
+
       const response = await api.post('/ai/generate-description', {
         productName: formData.name,
         category: categoryName,
@@ -173,15 +181,24 @@ const SellerProducts = () => {
         type: type
       })
 
+      console.log('✅ AI Response:', response.data);
+
       if (response.data.success) {
+        const description = response.data.data.description;
+        console.log(`📝 Setting ${type} description:`, description.substring(0, 100) + '...');
+        
         if (type === 'short') {
-          setFormData(prev => ({ ...prev, description: response.data.data.description }))
+          setFormData(prev => ({ ...prev, description: description }))
         } else {
-          setFormData(prev => ({ ...prev, detailedDescription: response.data.data.description }))
+          setFormData(prev => ({ ...prev, detailedDescription: description }))
         }
+      } else {
+        console.error('❌ AI Response not successful:', response.data);
+        setError('AI javob bermadi')
       }
     } catch (error) {
-      console.error('AI generation error:', error)
+      console.error('❌ AI generation error:', error)
+      console.error('Error details:', error.response?.data);
       setError(error.response?.data?.message || 'AI tavsif yaratishda xatolik')
     } finally {
       setAiLoading(prev => ({ ...prev, [type]: false }))

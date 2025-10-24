@@ -151,6 +151,15 @@ router.post('/generate-description', protect, async (req, res) => {
   try {
     const { productName, category, brand, price, type = 'short' } = req.body;
 
+    console.log('📥 AI Description Request:', {
+      productName,
+      category,
+      brand,
+      price,
+      type,
+      user: req.user?.email
+    });
+
     if (!productName) {
       return res.status(400).json({
         success: false,
@@ -201,6 +210,12 @@ Faqat tavsif matnini yoz, boshqa hech narsa yo'q:`;
 
     const result = await generateTextWithFallback(prompt);
 
+    console.log('🤖 AI Raw Response:', {
+      provider: result.provider,
+      textLength: result.text?.length,
+      sourcesCount: result.sources?.length || 0
+    });
+
     // Clean up the response
     const cleanedDescription = result.text
       .trim()
@@ -208,6 +223,8 @@ Faqat tavsif matnini yoz, boshqa hech narsa yo'q:`;
       .replace(/\*\*/g, '')
       .replace(/^(Tavsif:|Description:)/i, '')
       .trim();
+
+    console.log('✅ Cleaned Description:', cleanedDescription.substring(0, 100) + '...');
 
     res.json({
       success: true,
