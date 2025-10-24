@@ -75,6 +75,41 @@ class GeminiService {
     }
   }
 
+  async generateText(prompt) {
+    this.initializeTextModel();
+
+    if (!prompt || !prompt.trim()) {
+      throw new Error('Prompt bo\'sh bo\'lishi mumkin emas');
+    }
+
+    try {
+      const result = await this.textModel.generateContent({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: prompt }]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.9,
+          maxOutputTokens: 2048
+        }
+      });
+
+      const response = result.response?.text();
+      if (!response) {
+        throw new Error('Model javob bera olmadi');
+      }
+
+      return response.trim();
+    } catch (error) {
+      console.error('Gemini text generation xatosi:', error);
+      throw error;
+    }
+  }
+
   async generateSpeech(text) {
     this.initializeTtsModel();
 
