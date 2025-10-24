@@ -74,6 +74,9 @@ dailyProductPromotion.start();
 
 const app = express();
 
+// Trust proxy - for rate limiting behind reverse proxy (Render, Vercel, etc.)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Disable for API
