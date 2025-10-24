@@ -2,77 +2,121 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 class GeminiService {
   constructor() {
-    this.client = null;
+    this.clients = [];
+    this.currentClientIndex = 0;
     this.textModel = null;
     this.ttsModel = null;
     this.textModelInitialized = false;
     this.ttsModelInitialized = false;
   }
 
-  ensureClient() {
-    if (this.client) return;
+  ensureClients() {
+    if (this.clients.length > 0) return;
 
-    if (!process.env.GEMINI_API_KEY) {
+    // Support multiple API keys
+    const apiKeys = [];
+    
+    if (process.env.GEMINI_API_KEY) {
+      apiKeys.push(process.env.GEMINI_API_KEY);
+    }
+    
+    if (process.env.GEMINI_API_KEY_2) {
+      apiKeys.push(process.env.GEMINI_API_KEY_2);
+    }
+
+    if (apiKeys.length === 0) {
       throw new Error('GEMINI_API_KEY topilmadi. chatbot ishlashi uchun .env faylida kalitni belgilang.');
     }
 
-    this.client = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    // Initialize all clients
+    this.clients = apiKeys.map(key => new GoogleGenerativeAI(key));
+    console.log(`✓ Gemini: ${this.clients.length} ta API key yuklandi`);
+  }
+
+  getCurrentClient() {
+    this.ensureClients();
+    return this.clients[this.currentClientIndex];
+  }
+
+  rotateClient() {
+    if (this.clients.length > 1) {
+      this.currentClientIndex = (this.currentClientIndex + 1) % this.clients.length;
+      console.log(`🔄 Gemini API key almashtirish: key ${this.currentClientIndex + 1}/${this.clients.length}`);
+      return true;
+    }
+    return false;
   }
 
   initializeTextModel() {
-    if (this.textModelInitialized) return;
-
-    this.ensureClient();
-
+    this.ensureClients();
     const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
-    this.textModel = this.client.getGenerativeModel({ model: modelName });
-
-    this.textModelInitialized = true;
-    console.log(`✓ Gemini AI initialized with model: ${modelName}`);
+    
+    if (!this.textModelInitialized) {
+      console.log(`✓ Gemini AI initialized with model: ${modelName}`);
+      this.textModelInitialized = true;
+    }
   }
 
   initializeTtsModel() {
-    if (this.ttsModelInitialized) return;
-
-    this.ensureClient();
-
+    this.ensureClients();
     const ttsModelName = process.env.GEMINI_TTS_MODEL || 'gemini-2.0-flash-exp';
-    this.ttsModel = this.client.getGenerativeModel({ model: ttsModelName });
-
-    this.ttsModelInitialized = true;
-    console.log(`✓ Gemini TTS model initialized: ${ttsModelName}`);
+    
+    if (!this.ttsModelInitialized) {
+      console.log(`✓ Gemini TTS model initialized: ${ttsModelName}`);
+      this.ttsModelInitialized = true;
+    }
   }
 
   async generateChatResponse(history) {
     this.initializeTextModel();
 
-    try {
-      const result = await this.textModel.generateContent({
-        contents: history,
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.9,
-          maxOutputTokens: 1024
-        },
-        safetySettings: [
-          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
-          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
-        ]
-      });
+    const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
+    let lastError = null;
 
-      const response = result.response?.text();
-      if (!response) {
-        throw new Error('Model javob bera olmadi');
+    // Try all available API keys
+    for (let attempt = 0; attempt < this.clients.length; attempt++) {
+      try {
+        const client = this.getCurrentClient();
+        const textModel = client.getGenerativeModel({ model: modelName });
+
+        const result = await textModel.generateContent({
+          contents: history,
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.9,
+            maxOutputTokens: 1024
+          },
+          safetySettings: [
+            { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+            { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
+          ]
+        });
+
+        const response = result.response?.text();
+        if (!response) {
+          throw new Error('Model javob bera olmadi');
+        }
+
+        return response.trim();
+      } catch (error) {
+        lastError = error;
+        
+        // If quota exceeded (429) and we have more keys, rotate
+        if (error.status === 429 && this.rotateClient()) {
+          console.log(`⚠️ Gemini chat key ${attempt + 1} limit tugadi, keyingisini sinab ko'ramiz...`);
+          continue;
+        }
+        
+        // Otherwise throw error
+        console.error('Gemini chat xatosi:', error);
+        throw error;
       }
-
-      return response.trim();
-    } catch (error) {
-      console.error('Gemini chat xatosi:', error);
-      throw error;
     }
+
+    throw lastError;
   }
 
   async generateText(prompt) {
@@ -82,32 +126,52 @@ class GeminiService {
       throw new Error('Prompt bo\'sh bo\'lishi mumkin emas');
     }
 
-    try {
-      const result = await this.textModel.generateContent({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: prompt }]
+    const modelName = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
+    let lastError = null;
+
+    // Try all available API keys
+    for (let attempt = 0; attempt < this.clients.length; attempt++) {
+      try {
+        const client = this.getCurrentClient();
+        const textModel = client.getGenerativeModel({ model: modelName });
+
+        const result = await textModel.generateContent({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: prompt }]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.9,
+            maxOutputTokens: 2048
           }
-        ],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.9,
-          maxOutputTokens: 2048
+        });
+
+        const response = result.response?.text();
+        if (!response) {
+          throw new Error('Model javob bera olmadi');
         }
-      });
 
-      const response = result.response?.text();
-      if (!response) {
-        throw new Error('Model javob bera olmadi');
+        return response.trim();
+      } catch (error) {
+        lastError = error;
+        
+        // If quota exceeded (429) and we have more keys, rotate
+        if (error.status === 429 && this.rotateClient()) {
+          console.log(`⚠️ Gemini key ${attempt + 1} limit tugadi, keyingisini sinab ko'ramiz...`);
+          continue;
+        }
+        
+        // Otherwise throw error
+        console.error('Gemini text generation xatosi:', error);
+        throw error;
       }
-
-      return response.trim();
-    } catch (error) {
-      console.error('Gemini text generation xatosi:', error);
-      throw error;
     }
+
+    throw lastError;
   }
 
   async generateSpeech(text) {
