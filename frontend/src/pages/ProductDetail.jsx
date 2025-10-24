@@ -231,12 +231,25 @@ const ProductDetail = () => {
             <div className="mb-6 pb-6 border-b border-gray-200 dark:border-dark-border">
               <h3 className="text-lg font-bold text-gray-900 dark:text-dark-text mb-3 flex items-center gap-2">
                 <Package className="w-5 h-5 text-primary-600" />
-                Mahsulot haqida
+                Qisqa ta'rif
               </h3>
               <p className="text-gray-700 dark:text-dark-muted leading-relaxed whitespace-pre-wrap">
                 {product.description}
               </p>
             </div>
+
+            {/* Detailed Description */}
+            {product.detailedDescription && (
+              <div className="mb-6 pb-6 border-b border-gray-200 dark:border-dark-border">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-dark-text mb-3 flex items-center gap-2">
+                  <Package className="w-5 h-5 text-primary-600" />
+                  Batafsil ma'lumot
+                </h3>
+                <div className="text-gray-700 dark:text-dark-muted leading-relaxed whitespace-pre-wrap">
+                  {product.detailedDescription}
+                </div>
+              </div>
+            )}
 
             {/* Info Cards */}
             <div className="grid grid-cols-2 gap-4 mb-6">

@@ -16,6 +16,7 @@ const SellerProducts = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    detailedDescription: '',
     price: '',
     wholesalePrice: '',
     category: '',
@@ -104,6 +105,7 @@ const SellerProducts = () => {
     setFormData({
       name: product.name,
       description: product.description,
+      detailedDescription: product.detailedDescription || '',
       price: product.price,
       wholesalePrice: product.wholesalePrice || '',
       category: product.category?._id || '',
@@ -135,6 +137,7 @@ const SellerProducts = () => {
     setFormData({
       name: '',
       description: '',
+      detailedDescription: '',
       price: '',
       wholesalePrice: '',
       category: '',
@@ -420,17 +423,40 @@ const SellerProducts = () => {
               {/* Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
-                  Tavsif *
+                  Qisqa ta'rif *
                 </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
                   required
-                  rows="4"
+                  rows="3"
+                  maxLength="500"
                   className="w-full px-4 py-3 border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Mahsulot haqida batafsil ma'lumot..."
+                  placeholder="Mahsulot haqida qisqacha (max 500 belgi)..."
                 />
+                <p className="text-xs text-gray-500 dark:text-dark-muted mt-1">
+                  {formData.description.length}/500 belgi
+                </p>
+              </div>
+
+              {/* Detailed Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
+                  Batafsil ma'lumot
+                </label>
+                <textarea
+                  name="detailedDescription"
+                  value={formData.detailedDescription}
+                  onChange={handleChange}
+                  rows="6"
+                  maxLength="5000"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-dark-border bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Mahsulot haqida to'liq ma'lumot: xususiyatlari, qo'llanilishi, afzalliklari va h.k. (max 5000 belgi)"
+                />
+                <p className="text-xs text-gray-500 dark:text-dark-muted mt-1">
+                  {formData.detailedDescription.length}/5000 belgi
+                </p>
               </div>
 
               {/* Price and Wholesale Price */}
