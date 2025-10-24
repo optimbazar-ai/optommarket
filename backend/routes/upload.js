@@ -1,6 +1,5 @@
 import express from 'express';
-import multer from 'multer';
-import upload from '../middleware/upload.js';
+import { upload } from '../config/cloudinary.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -18,9 +17,8 @@ router.post('/single', upload.single('image'), (req, res) => {
       });
     }
 
-    // To'liq URL yaratish
-    const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
-    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
+    // Cloudinary returns full URL
+    const imageUrl = req.file.path; // Cloudinary URL
 
     res.status(200).json({
       success: true,
@@ -29,7 +27,8 @@ router.post('/single', upload.single('image'), (req, res) => {
         filename: req.file.filename,
         url: imageUrl,
         size: req.file.size,
-        mimetype: req.file.mimetype
+        mimetype: req.file.mimetype,
+        cloudinary_id: req.file.filename // For deletion later
       }
     });
   } catch (error) {
@@ -52,12 +51,12 @@ router.post('/multiple', upload.array('images', 5), (req, res) => {
       });
     }
 
-    const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
     const images = req.files.map(file => ({
       filename: file.filename,
-      url: `${baseUrl}/uploads/${file.filename}`,
+      url: file.path, // Cloudinary URL
       size: file.size,
-      mimetype: file.mimetype
+      mimetype: file.mimetype,
+      cloudinary_id: file.filename
     }));
 
     res.status(200).json({
