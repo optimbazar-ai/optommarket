@@ -13,6 +13,7 @@ OptoMarket.uz platformasiga mahsulot rasmlarini yuklash tizimi qo'shildi. Foydal
 
 - ✅ **Drag & Drop** - Rasmlarni sudrab olib tashlash
 - ✅ **Multiple Upload** - Bir vaqtning o'zida 5 tagacha rasm
+- ✅ **URL Upload** - URL orqali rasm qo'shish
 - ✅ **Image Preview** - Real-time preview
 - ✅ **Progress Bar** - Yuklash jarayoni ko'rsatkichi
 - ✅ **Validation** - Fayl turi va hajmi tekshiruvi
@@ -300,7 +301,30 @@ VITE ready
 - ✅ Grid layout (5 columns)
 - ✅ Birinchi rasm "Asosiy" badge bilan
 
-#### Test 3: Image Removal
+#### Test 3: URL orqali rasm qo'shish
+
+1. **Mahsulot qo'shish** modalini oching
+2. **"URL orqali qo'shish"** tugmasini bosing
+3. **URL input** ko'rinishini tekshiring
+4. **To'liq URL kiriting** (masalan: https://example.com/image.jpg)
+5. **"Qo'shish"** tugmasini bosing
+6. **Rasm preview'da** ko'rinishini tekshiring
+
+**Kutilgan natija:**
+- ✅ URL input ochiladi/yopiladi
+- ✅ To'g'ri URL qabul qilinadi
+- ✅ Noto'g'ri URL rad etiladi
+- ✅ Rasm preview'da ko'rinadi
+
+**Test URL'lar:**
+```
+✅ To'g'ri: https://example.com/image.jpg
+✅ To'g'ri: https://picsum.photos/500/500
+❌ Noto'g'ri: not-a-url
+❌ Noto'g'ri: example.com/image.jpg (http:// yoki https:// yo'q)
+```
+
+#### Test 4: Image Removal
 
 1. **Mahsulot qo'shish** modalini oching
 2. **Rasm yuklang**
@@ -314,9 +338,9 @@ VITE ready
 - ✅ Click qilganda rasm o'chiriladi
 - ✅ Boshqa rasmlar joyida qoladi
 
-#### Test 4: Validation Tests
+#### Test 5: Validation Tests
 
-**Test 4.1: File Size Limit**
+**Test 5.1: File Size Limit**
 1. **6MB+ rasm** yuklashga harakat qiling
 2. **Error message** ko'rinishini kutish
 
@@ -325,7 +349,7 @@ VITE ready
 ❌ Fayl hajmi juda katta! Maksimal: 5MB
 ```
 
-**Test 4.2: Invalid File Type**
+**Test 5.2: Invalid File Type**
 1. **PDF yoki text file** yuklashga harakat qiling
 2. **Error message** ko'rinishini kutish
 
@@ -334,7 +358,7 @@ VITE ready
 ❌ Faqat rasm fayllari yuklash mumkin! (jpeg, jpg, png, gif, webp)
 ```
 
-**Test 4.3: Max Images Limit**
+**Test 5.3: Max Images Limit**
 1. **5 ta rasm** yuklang
 2. **6-rasm** yuklashga harakat qiling
 3. **Upload area** ko'rinmasligi kerak
@@ -343,7 +367,7 @@ VITE ready
 - ✅ 5 ta rasmdan keyin upload area yo'qoladi
 - ✅ "0 ta qoldi" yozuvi
 
-#### Test 5: Edit Product with Images
+#### Test 6: Edit Product with Images
 
 1. **Mavjud mahsulotni** tahrirlang
 2. **Hozirgi rasmlar** preview'da ko'rinishi kerak
@@ -678,6 +702,7 @@ async function uploadImage(file) {
 - [x] Static file serving
 - [x] Frontend ImageUpload component
 - [x] Integration with SellerProducts
+- [x] URL orqali rasm qo'shish
 - [x] Error handling
 - [x] Validation
 - [x] Progress bar

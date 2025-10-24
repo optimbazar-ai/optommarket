@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
-import { Upload, X, Image as ImageIcon, Loader } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, Loader, Link } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const BASE_URL = API_URL.replace('/api', ''); // For static files
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = `${BASE_URL}/api`; // For API calls
 
 const ImageUpload = ({ 
   images = [], 
@@ -14,6 +14,8 @@ const ImageUpload = ({
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState('');
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
   const fileInputRef = useRef(null);
 
   const handleFileSelect = async (e) => {
@@ -108,6 +110,33 @@ const ImageUpload = ({
     handleFileSelect(fakeEvent);
   };
 
+  const handleAddImageUrl = () => {
+    if (!imageUrl.trim()) {
+      setError('URL manzilini kiriting');
+      return;
+    }
+
+    // Check max images limit
+    if (images.length >= maxImages) {
+      setError(`Maksimal ${maxImages} ta rasm yuklash mumkin`);
+      return;
+    }
+
+    // Validate URL format
+    try {
+      new URL(imageUrl);
+    } catch (e) {
+      setError('Noto\'g\'ri URL manzil. To\'liq URL kiriting (https://example.com/image.jpg)');
+      return;
+    }
+
+    // Add URL to images
+    onChange([...images, imageUrl]);
+    setImageUrl('');
+    setShowUrlInput(false);
+    setError('');
+  };
+
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -116,44 +145,90 @@ const ImageUpload = ({
 
       {/* Upload Area */}
       {images.length < maxImages && (
-        <div
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition-all"
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileSelect}
-            className="hidden"
-            disabled={uploading}
-          />
+        <div className="space-y-4">
+          <div
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onClick={() => !showUrlInput && fileInputRef.current?.click()}
+            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary-500 hover:bg-primary-50 transition-all"
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileSelect}
+              className="hidden"
+              disabled={uploading || showUrlInput}
+            />
 
-          {uploading ? (
-            <div className="space-y-3">
-              <Loader className="w-12 h-12 text-primary-600 mx-auto animate-spin" />
-              <p className="text-gray-600">Yuklanmoqda... {uploadProgress}%</p>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-primary-600 h-2 rounded-full transition-all"
-                  style={{ width: `${uploadProgress}%` }}
+            {uploading ? (
+              <div className="space-y-3">
+                <Loader className="w-12 h-12 text-primary-600 mx-auto animate-spin" />
+                <p className="text-gray-600">Yuklanmoqda... {uploadProgress}%</p>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-primary-600 h-2 rounded-full transition-all"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <Upload className="w-12 h-12 text-gray-400 mx-auto" />
+                <div>
+                  <p className="text-gray-600">
+                    <span className="text-primary-600 font-semibold">Click qiling</span> yoki rasmni bu yerga torting
+                  </p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    PNG, JPG, GIF, WEBP (max 5MB, {maxImages - images.length} ta qoldi)
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* URL Input Toggle */}
+          <div className="flex items-center justify-center gap-2">
+            <div className="flex-1 h-px bg-gray-300"></div>
+            <button
+              type="button"
+              onClick={() => setShowUrlInput(!showUrlInput)}
+              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-primary-600 transition-colors"
+              disabled={uploading}
+            >
+              <Link className="w-4 h-4" />
+              {showUrlInput ? 'Yopish' : 'URL orqali qo\'shish'}
+            </button>
+            <div className="flex-1 h-px bg-gray-300"></div>
+          </div>
+
+          {/* URL Input Field */}
+          {showUrlInput && (
+            <div className="border-2 border-gray-300 rounded-lg p-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rasm URL manzili
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://example.com/image.jpg"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddImageUrl()}
                 />
+                <button
+                  type="button"
+                  onClick={handleAddImageUrl}
+                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                >
+                  Qo\'shish
+                </button>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-              <div>
-                <p className="text-gray-600">
-                  <span className="text-primary-600 font-semibold">Click qiling</span> yoki rasmni bu yerga torting
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  PNG, JPG, GIF, WEBP (max 5MB, {maxImages - images.length} ta qoldi)
-                </p>
-              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                💡 To'liq URL manzilini kiriting (masalan: https://example.com/rasm.jpg)
+              </p>
             </div>
           )}
         </div>
