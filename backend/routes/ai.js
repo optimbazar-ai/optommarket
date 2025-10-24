@@ -6,13 +6,18 @@ import { protect } from '../middleware/auth.js';
 const router = express.Router();
 
 // AI service with fallback
-async function generateTextWithFallback(prompt) {
+async function generateTextWithFallback(prompt, useGoogleSearch = false) {
   // Try Gemini first
   try {
     console.log('🤖 Trying Gemini AI...');
-    const result = await geminiService.generateText(prompt);
+    const result = await geminiService.generateText(prompt, useGoogleSearch);
     console.log('✅ Gemini AI success');
-    return { text: result, provider: 'Gemini' };
+    
+    // Handle both old string format and new object format
+    if (typeof result === 'string') {
+      return { text: result, sources: [], provider: 'Gemini' };
+    }
+    return { ...result, provider: 'Gemini' };
   } catch (geminiError) {
     console.log('⚠️ Gemini failed, trying Cohere...');
     
@@ -20,7 +25,7 @@ async function generateTextWithFallback(prompt) {
     try {
       const result = await cohereService.generateText(prompt);
       console.log('✅ Cohere AI success');
-      return { text: result, provider: 'Cohere' };
+      return { text: result, sources: [], provider: 'Cohere' };
     } catch (cohereError) {
       console.error('❌ Both AI services failed');
       console.error('Gemini error:', geminiError.message);
@@ -209,7 +214,8 @@ Faqat tavsif matnini yoz, boshqa hech narsa yo'q:`;
       data: {
         description: cleanedDescription,
         type: type,
-        provider: result.provider // Qaysi AI ishlatilganini ko'rsatish
+        provider: result.provider, // Qaysi AI ishlatilganini ko'rsatish
+        sources: result.sources || [] // Google Search manbalarini qaytarish
       }
     });
   } catch (error) {

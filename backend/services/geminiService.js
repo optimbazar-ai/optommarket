@@ -119,7 +119,7 @@ class GeminiService {
     throw lastError;
   }
 
-  async generateText(prompt) {
+  async generateText(prompt, useGoogleSearch = false) {
     this.initializeTextModel();
 
     if (!prompt || !prompt.trim()) {
@@ -135,7 +135,7 @@ class GeminiService {
         const client = this.getCurrentClient();
         const textModel = client.getGenerativeModel({ model: modelName });
 
-        const result = await textModel.generateContent({
+        const requestConfig = {
           contents: [
             {
               role: 'user',
@@ -148,14 +148,36 @@ class GeminiService {
             topP: 0.9,
             maxOutputTokens: 2048
           }
-        });
+        };
+
+        // Add Google Search tool if requested
+        if (useGoogleSearch) {
+          requestConfig.tools = [{ googleSearch: {} }];
+        }
+
+        const result = await textModel.generateContent(requestConfig);
 
         const response = result.response?.text();
         if (!response) {
           throw new Error('Model javob bera olmadi');
         }
 
-        return response.trim();
+        // Extract sources if Google Search was used
+        let sources = [];
+        const groundingMetadata = result.response?.candidates?.[0]?.groundingMetadata;
+        if (groundingMetadata?.groundingAttributions) {
+          sources = groundingMetadata.groundingAttributions
+            .map(attr => ({
+              uri: attr.web?.uri,
+              title: attr.web?.title
+            }))
+            .filter(source => source.uri && source.title);
+        }
+
+        return { 
+          text: response.trim(),
+          sources: sources
+        };
       } catch (error) {
         lastError = error;
         
