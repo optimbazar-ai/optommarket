@@ -34,21 +34,20 @@ class CohereService {
     }
 
     try {
-      const response = await this.client.generate({
-        prompt: prompt,
+      // Use new Chat API instead of deprecated Generate API
+      const response = await this.client.chat({
+        message: prompt,
         model: 'command',
-        maxTokens: 2048,
         temperature: 0.7,
-        k: 0,
-        stopSequences: [],
-        returnLikelihoods: 'NONE'
+        maxTokens: 2048,
+        promptTruncation: 'AUTO'
       });
 
-      if (!response.generations || response.generations.length === 0) {
+      if (!response.text) {
         throw new Error('Cohere javob bera olmadi');
       }
 
-      return response.generations[0].text.trim();
+      return response.text.trim();
     } catch (error) {
       console.error('Cohere text generation xatosi:', error);
       throw error;
