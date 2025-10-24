@@ -1,6 +1,8 @@
 import express from 'express';
-import { upload } from '../config/cloudinary.js';
+import { upload } from '../middleware/upload.js';
 import { protect } from '../middleware/auth.js';
+import { uploadToImgBB } from '../config/imgbb.js';
+import fs from 'fs';
 
 const router = express.Router();
 
@@ -8,7 +10,7 @@ const router = express.Router();
 router.use(protect);
 
 // Single image upload
-router.post('/single', upload.single('image'), (req, res) => {
+router.post('/single', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -17,8 +19,11 @@ router.post('/single', upload.single('image'), (req, res) => {
       });
     }
 
-    // Cloudinary returns full URL
-    const imageUrl = req.file.path; // Cloudinary URL
+    // Upload to ImgBB
+    const imageUrl = await uploadToImgBB(req.file.path);
+
+    // Delete local file after upload
+    fs.unlinkSync(req.file.path);
 
     res.status(200).json({
       success: true,
@@ -27,11 +32,19 @@ router.post('/single', upload.single('image'), (req, res) => {
         filename: req.file.filename,
         url: imageUrl,
         size: req.file.size,
-        mimetype: req.file.mimetype,
-        cloudinary_id: req.file.filename // For deletion later
+        mimetype: req.file.mimetype
       }
     });
   } catch (error) {
+    // Clean up local file on error
+    if (req.file && req.file.path) {
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (e) {
+        console.error('File cleanup error:', e);
+      }
+    }
+    
     console.error('❌ Upload error:', error);
     res.status(500).json({
       success: false,
@@ -42,7 +55,7 @@ router.post('/single', upload.single('image'), (req, res) => {
 });
 
 // Multiple images upload
-router.post('/multiple', upload.array('images', 5), (req, res) => {
+router.post('/multiple', upload.array('images', 5), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({
@@ -51,13 +64,20 @@ router.post('/multiple', upload.array('images', 5), (req, res) => {
       });
     }
 
-    const images = req.files.map(file => ({
-      filename: file.filename,
-      url: file.path, // Cloudinary URL
-      size: file.size,
-      mimetype: file.mimetype,
-      cloudinary_id: file.filename
-    }));
+    // Upload all images to ImgBB
+    const uploadPromises = req.files.map(async (file) => {
+      const url = await uploadToImgBB(file.path);
+      // Delete local file after upload
+      fs.unlinkSync(file.path);
+      return {
+        filename: file.filename,
+        url: url,
+        size: file.size,
+        mimetype: file.mimetype
+      };
+    });
+
+    const images = await Promise.all(uploadPromises);
 
     res.status(200).json({
       success: true,
@@ -65,6 +85,17 @@ router.post('/multiple', upload.array('images', 5), (req, res) => {
       data: images
     });
   } catch (error) {
+    // Clean up local files on error
+    if (req.files) {
+      req.files.forEach(file => {
+        try {
+          fs.unlinkSync(file.path);
+        } catch (e) {
+          console.error('File cleanup error:', e);
+        }
+      });
+    }
+
     console.error('❌ Upload error:', error);
     res.status(500).json({
       success: false,
