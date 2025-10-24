@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Package, Edit, Trash2, Eye, Search, Filter, X, Save, Image as ImageIcon, AlertCircle, CheckCircle, Clock } from 'lucide-react'
+import { Plus, Package, Edit, Trash2, Eye, Search, Filter, X, Save, Image as ImageIcon, AlertCircle, CheckCircle, Clock, Sparkles } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
 import ImageUpload from '../components/ImageUpload'
@@ -13,6 +13,7 @@ const SellerProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
+  const [aiLoading, setAiLoading] = useState({ short: false, detailed: false })
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -150,6 +151,41 @@ const SellerProducts = () => {
     })
     setEditingProduct(null)
     setError('')
+  }
+
+  const generateAIDescription = async (type) => {
+    if (!formData.name) {
+      setError('Avval mahsulot nomini kiriting')
+      return
+    }
+
+    setAiLoading(prev => ({ ...prev, [type]: true }))
+    setError('')
+
+    try {
+      const categoryName = categories.find(c => c._id === formData.category)?.name || ''
+      
+      const response = await api.post('/ai/generate-description', {
+        productName: formData.name,
+        category: categoryName,
+        brand: formData.brand,
+        price: formData.price,
+        type: type
+      })
+
+      if (response.data.success) {
+        if (type === 'short') {
+          setFormData(prev => ({ ...prev, description: response.data.data.description }))
+        } else {
+          setFormData(prev => ({ ...prev, detailedDescription: response.data.data.description }))
+        }
+      }
+    } catch (error) {
+      console.error('AI generation error:', error)
+      setError(error.response?.data?.message || 'AI tavsif yaratishda xatolik')
+    } finally {
+      setAiLoading(prev => ({ ...prev, [type]: false }))
+    }
   }
 
   const filteredProducts = products.filter(product => {
@@ -422,9 +458,29 @@ const SellerProducts = () => {
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
-                  Qisqa ta'rif *
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-dark-text">
+                    Qisqa ta'rif *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => generateAIDescription('short')}
+                    disabled={aiLoading.short || !formData.name}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    {aiLoading.short ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Yaratilmoqda...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        AI bilan yozdirish
+                      </>
+                    )}
+                  </button>
+                </div>
                 <textarea
                   name="description"
                   value={formData.description}
@@ -442,9 +498,29 @@ const SellerProducts = () => {
 
               {/* Detailed Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
-                  Batafsil ma'lumot
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-dark-text">
+                    Batafsil ma'lumot
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => generateAIDescription('detailed')}
+                    disabled={aiLoading.detailed || !formData.name}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  >
+                    {aiLoading.detailed ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Yaratilmoqda...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        AI bilan yozdirish
+                      </>
+                    )}
+                  </button>
+                </div>
                 <textarea
                   name="detailedDescription"
                   value={formData.detailedDescription}
