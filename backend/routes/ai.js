@@ -30,7 +30,7 @@ async function generateTextWithFallback(prompt) {
   }
 }
 
-// POST /api/ai/chat - generate chatbot response using Gemini
+// POST /api/ai/chat - generate chatbot response using Gemini/Cohere
 router.post('/chat', async (req, res) => {
   try {
     const { message, history = [] } = req.body;
@@ -52,7 +52,40 @@ router.post('/chat', async (req, res) => {
       }
     ];
 
-    const responseText = await geminiService.generateChatResponse(conversation);
+    let responseText;
+    let provider;
+
+    // Try Gemini first
+    try {
+      console.log('🤖 Trying Gemini AI for chat...');
+      responseText = await geminiService.generateChatResponse(conversation);
+      provider = 'Gemini';
+      console.log('✅ Gemini AI chat success');
+    } catch (geminiError) {
+      console.log('⚠️ Gemini failed, trying Cohere for chat...');
+      
+      // Fallback to Cohere (simple text generation without history)
+      try {
+        // Build context from history
+        let contextPrompt = 'Sen yordamchi chatbotsаn. Foydalanuvchiga yordam ber.\n\n';
+        if (formattedHistory.length > 0) {
+          contextPrompt += 'Suhbat tarixi:\n';
+          formattedHistory.forEach(msg => {
+            const role = msg.role === 'user' ? 'Foydalanuvchi' : 'Bot';
+            const text = msg.parts?.[0]?.text || '';
+            contextPrompt += `${role}: ${text}\n`;
+          });
+        }
+        contextPrompt += `\nFoydalanuvchi: ${message}\nBot:`;
+        
+        responseText = await cohereService.generateText(contextPrompt);
+        provider = 'Cohere';
+        console.log('✅ Cohere AI chat success');
+      } catch (cohereError) {
+        console.error('❌ Both AI services failed for chat');
+        throw new Error('AI javobini olishda xatolik. Keyinroq qayta urinib ko\'ring.');
+      }
+    }
 
     const updatedHistory = [
       ...conversation,
@@ -66,7 +99,8 @@ router.post('/chat', async (req, res) => {
       success: true,
       data: {
         response: responseText,
-        history: updatedHistory
+        history: updatedHistory,
+        provider: provider
       }
     });
   } catch (error) {
