@@ -1,8 +1,34 @@
 import express from 'express';
 import geminiService from '../services/geminiService.js';
+import cohereService from '../services/cohereService.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// AI service with fallback
+async function generateTextWithFallback(prompt) {
+  // Try Gemini first
+  try {
+    console.log('🤖 Trying Gemini AI...');
+    const result = await geminiService.generateText(prompt);
+    console.log('✅ Gemini AI success');
+    return { text: result, provider: 'Gemini' };
+  } catch (geminiError) {
+    console.log('⚠️ Gemini failed, trying Cohere...');
+    
+    // Try Cohere as fallback
+    try {
+      const result = await cohereService.generateText(prompt);
+      console.log('✅ Cohere AI success');
+      return { text: result, provider: 'Cohere' };
+    } catch (cohereError) {
+      console.error('❌ Both AI services failed');
+      console.error('Gemini error:', geminiError.message);
+      console.error('Cohere error:', cohereError.message);
+      throw new Error('Barcha AI xizmatlari ishlamadi. Keyinroq qayta urinib ko\'ring.');
+    }
+  }
+}
 
 // POST /api/ai/chat - generate chatbot response using Gemini
 router.post('/chat', async (req, res) => {
@@ -134,10 +160,10 @@ Matnni quyidagi formatda yoz:
 
 Faqat tavsif matnini yoz, boshqa hech narsa yo'q:`;
 
-    const description = await geminiService.generateText(prompt);
+    const result = await generateTextWithFallback(prompt);
 
     // Clean up the response
-    const cleanedDescription = description
+    const cleanedDescription = result.text
       .trim()
       .replace(/```/g, '')
       .replace(/\*\*/g, '')
@@ -148,7 +174,8 @@ Faqat tavsif matnini yoz, boshqa hech narsa yo'q:`;
       success: true,
       data: {
         description: cleanedDescription,
-        type: type
+        type: type,
+        provider: result.provider // Qaysi AI ishlatilganini ko'rsatish
       }
     });
   } catch (error) {
