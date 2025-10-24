@@ -62,7 +62,8 @@ class TelegramService {
     const title = `<b>${post.title}</b>`;
     const excerpt = post.excerpt || post.content.substring(0, 200) + '...';
     const category = post.category ? `\n\n📁 Kategoriya: <i>${post.category}</i>` : '';
-    const link = `\n\n🔗 <a href="${process.env.FRONTEND_URL || 'https://optommarket.uz'}/blog/${post.slug}">Batafsil o'qish</a>`;
+    const baseUrl = (process.env.FRONTEND_URL || 'https://optommarket.uz').replace(/\/$/, '');
+    const link = `\n\n🔗 <a href="${baseUrl}/blog/${post.slug}">Batafsil o'qish</a>`;
     
     return `${title}\n\n${excerpt}${category}${link}`;
   }
@@ -103,7 +104,8 @@ class TelegramService {
     const price = `\n\n💰 <b>Narx:</b> ${product.price.toLocaleString('uz-UZ')} so'm`;
     const minOrder = product.minOrderQuantity ? `\n📦 <b>Minimum buyurtma:</b> ${product.minOrderQuantity} dona` : '';
     const category = product.category?.name ? `\n\n📁 <i>${product.category.name}</i>` : '';
-    const link = `\n\n🛒 <a href="${process.env.FRONTEND_URL || 'https://optommarket.uz'}/products/${product._id}">Buyurtma berish</a>`;
+    const baseUrl = (process.env.FRONTEND_URL || 'https://optommarket.uz').replace(/\/$/, '');
+    const link = `\n\n🛒 <a href="${baseUrl}/products/${product._id}">Buyurtma berish</a>`;
     
     return `${title}${description}${price}${minOrder}${category}${link}`;
   }
@@ -141,7 +143,8 @@ class TelegramService {
       ? `\n\n⏰ Amal qilish muddati: ${new Date(promo.validUntil).toLocaleDateString('uz-UZ')}`
       : '';
     const description = promo.description ? `\n\n📝 ${promo.description}` : '';
-    const link = `\n\n🛍️ <a href="${process.env.FRONTEND_URL || 'https://optommarket.uz'}/products">Xarid qilish</a>`;
+    const baseUrl = (process.env.FRONTEND_URL || 'https://optommarket.uz').replace(/\/$/, '');
+    const link = `\n\n🛍️ <a href="${baseUrl}/products">Xarid qilish</a>`;
     
     return `${title}${code}${discount}${minAmount}${validUntil}${description}${link}`;
   }
