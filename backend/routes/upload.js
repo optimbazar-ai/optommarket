@@ -18,7 +18,9 @@ router.post('/single', upload.single('image'), (req, res) => {
       });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // To'liq URL yaratish
+    const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
+    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
     res.status(200).json({
       success: true,
@@ -50,9 +52,10 @@ router.post('/multiple', upload.array('images', 5), (req, res) => {
       });
     }
 
+    const baseUrl = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
     const images = req.files.map(file => ({
       filename: file.filename,
-      url: `/uploads/${file.filename}`,
+      url: `${baseUrl}/uploads/${file.filename}`,
       size: file.size,
       mimetype: file.mimetype
     }));

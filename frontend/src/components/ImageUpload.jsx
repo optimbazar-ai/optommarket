@@ -2,8 +2,8 @@ import { useState, useRef } from 'react';
 import { Upload, X, Image as ImageIcon, Loader, Link } from 'lucide-react';
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const API_URL = `${BASE_URL}/api`; // For API calls
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const BASE_URL = API_URL.replace('/api', ''); // For static files
 
 const ImageUpload = ({ 
   images = [], 
@@ -67,8 +67,10 @@ const ImageUpload = ({
         });
 
         if (response.data.success) {
-          // Convert relative URL to full URL (static files are served from root, not /api)
-          const imageUrl = `${BASE_URL}${response.data.data.url}`;
+          // Backend allaqachon to'liq URL qaytaradi
+          const imageUrl = response.data.data.url;
+          console.log('📷 Uploaded image URL:', imageUrl);
+          console.log('📦 Response data:', response.data.data);
           uploadedUrls.push(imageUrl);
         }
       }
@@ -251,7 +253,9 @@ const ImageUpload = ({
                   src={url}
                   alt={`Product ${index + 1}`}
                   className="w-full h-full object-cover"
+                  onLoad={() => console.log('✅ Image loaded:', url)}
                   onError={(e) => {
+                    console.error('❌ Image load error:', url);
                     e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23f0f0f0" width="100" height="100"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle"%3ENo Image%3C/text%3E%3C/svg%3E';
                   }}
                 />
