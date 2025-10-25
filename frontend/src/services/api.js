@@ -50,7 +50,9 @@ export const productsAPI = {
 export const categoriesAPI = {
   getAll: () => api.get('/categories'),
   getById: (id) => api.get(`/categories/${id}`),
-  create: (data) => api.post('/categories', data)
+  create: (data) => api.post('/categories', data),
+  update: (id, data) => api.put(`/categories/${id}`, data),
+  delete: (id) => api.delete(`/categories/${id}`)
 }
 
 export const authAPI = {

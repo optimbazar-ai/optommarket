@@ -181,10 +181,10 @@ const SellerProducts = () => {
         type: type
       })
 
-      console.log('✅ AI Response:', response.data);
+      console.log('✅ AI Response:', response);
 
-      if (response.data.success) {
-        const description = response.data.data.description;
+      if (response.success) {
+        const description = response.data.description;
         console.log(`📝 Setting ${type} description:`, description.substring(0, 100) + '...');
         
         if (type === 'short') {
@@ -193,13 +193,12 @@ const SellerProducts = () => {
           setFormData(prev => ({ ...prev, detailedDescription: description }))
         }
       } else {
-        console.error('❌ AI Response not successful:', response.data);
+        console.error('❌ AI Response not successful:', response);
         setError('AI javob bermadi')
       }
     } catch (error) {
       console.error('❌ AI generation error:', error)
-      console.error('Error details:', error.response?.data);
-      setError(error.response?.data?.message || 'AI tavsif yaratishda xatolik')
+      setError(error?.message || error?.error || 'AI tavsif yaratishda xatolik')
     } finally {
       setAiLoading(prev => ({ ...prev, [type]: false }))
     }
