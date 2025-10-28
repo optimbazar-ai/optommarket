@@ -23,6 +23,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   ? [
       'https://optommarket.vercel.app',
       'https://optommarket-frontend.vercel.app',
+      'https://optom-market-vercel.app',
       process.env.FRONTEND_URL,
     ].filter(Boolean)
   : [
