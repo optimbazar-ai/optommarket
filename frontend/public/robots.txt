@@ -1,0 +1,93 @@
+# OptomMarket.uz - O'zbekistondagi №1 optom savdo platformasi
+# https://optommarket.uz
+
+# Google Bot
+User-agent: Googlebot
+Allow: /
+Allow: /products
+Allow: /products/*
+Allow: /categories
+Allow: /categories/*
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /seller
+Disallow: /seller/*
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Crawl-delay: 0.5
+
+# Yandex Bot
+User-agent: Yandex
+Allow: /
+Allow: /products
+Allow: /products/*
+Allow: /categories
+Allow: /categories/*
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /seller
+Disallow: /seller/*
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Crawl-delay: 0.5
+Host: https://optommarket.uz
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /
+Allow: /products
+Allow: /products/*
+Allow: /categories
+Allow: /categories/*
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /seller
+Disallow: /seller/*
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Crawl-delay: 0.5
+
+# All other bots
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /products/*
+Allow: /categories
+Allow: /categories/*
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /seller
+Disallow: /seller/*
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+Disallow: /api/
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://optommarket.uz/sitemap.xml
+Sitemap: https://optommarket.uz/sitemap-products.xml
+Sitemap: https://optommarket.uz/sitemap-categories.xml
+Sitemap: https://optommarket.uz/sitemap-blog.xml

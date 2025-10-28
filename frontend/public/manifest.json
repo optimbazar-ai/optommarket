@@ -1,0 +1,84 @@
+{
+  "name": "OptomMarket.uz - Optom Savdo Platformasi",
+  "short_name": "OptomMarket",
+  "description": "O'zbekistondagi eng yirik optom savdo platformasi. 10,000+ mahsulotlar, raqobatbardosh narxlar va tez yetkazib berish.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#2563EB",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "uz-UZ",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "shopping",
+    "business",
+    "productivity"
+  ],
+  "shortcuts": [
+    {
+      "name": "Mahsulotlar",
+      "short_name": "Products",
+      "description": "Barcha mahsulotlarni ko'rish",
+      "url": "/products",
+      "icons": [
+        {
+          "src": "/icon-192.svg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Kategoriyalar",
+      "short_name": "Categories",
+      "description": "Mahsulot kategoriyalari",
+      "url": "/categories",
+      "icons": [
+        {
+          "src": "/icon-192.svg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Savatcha",
+      "short_name": "Cart",
+      "description": "Xarid savatchasi",
+      "url": "/cart",
+      "icons": [
+        {
+          "src": "/icon-192.svg",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ]
+}
