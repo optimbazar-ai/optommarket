@@ -26,10 +26,14 @@ const Login = () => {
     setError('')
     setLoading(true)
 
+    console.log('🚀 Login form submitted:', formData.email)
     try {
-      await login(formData.email, formData.password)
+      const result = await login(formData.email, formData.password)
+      console.log('✅ Login successful, navigating to dashboard...', result)
       navigate('/dashboard')
+      console.log('✅ Navigate called')
     } catch (err) {
+      console.error('❌ Login error:', err)
       setError(err.message || 'Login xatolik yuz berdi')
     } finally {
       setLoading(false)

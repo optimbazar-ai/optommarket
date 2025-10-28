@@ -37,10 +37,13 @@ export const AuthProvider = ({ children }) => {
   }
 
   const login = async (email, password) => {
+    console.log('🔐 AuthContext login started...')
     const data = await authAPI.login(email, password)
+    console.log('✅ Login response:', data)
     setToken(data.token)
     setUser(data.user)
     localStorage.setItem('token', data.token)
+    console.log('✅ Token saved, user set:', data.user)
     return data
   }
 
