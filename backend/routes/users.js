@@ -64,30 +64,35 @@ router.post('/login', async (req, res) => {
     console.log('✅ Login successful for:', email);
     res.json({ user: userWithoutPassword, token });
   } catch (error) {
-    console.error('❌ Login error:', error);
+    console.error(' Login error:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
 // Get current user profile
-router.get('/profile', verifyToken, async (req, res) => {
+const getProfileHandler = async (req, res) => {
   try {
     console.log('Profile request - req.user:', req.user);
     
     if (!req.user || !req.user.id) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
-    
+
     const user = await User.findById(req.user.id);
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+
     res.json(user);
   } catch (error) {
-    console.error('Profile endpoint error:', error);
+    console.error('Profile fetch error:', error);
     res.status(500).json({ error: error.message });
   }
-});
+};
+
+router.get('/profile', verifyToken, getProfileHandler);
+router.get('/me', verifyToken, getProfileHandler);
 
 // Update user profile
 router.put('/profile', verifyToken, async (req, res) => {
