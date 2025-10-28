@@ -94,6 +94,7 @@ app.get('/api/health', async (req, res) => {
 
 // API Routes
 app.use('/api/users', usersRoutes);
+app.use('/api/auth', usersRoutes); // Alias for /api/users (for frontend compatibility)
 app.use('/api/products', productsRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/chatbot', chatbotRoutes);
