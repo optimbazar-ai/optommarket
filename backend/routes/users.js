@@ -33,18 +33,27 @@ router.post('/register', async (req, res) => {
 // Login user
 router.post('/login', async (req, res) => {
   try {
+    console.log('🔐 Login attempt:', req.body.email);
     const { email, password } = req.body;
 
     const user = await User.findByEmail(email);
+    console.log('👤 User found:', user ? 'Yes' : 'No');
+    
     if (!user) {
+      console.log('❌ User not found');
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    console.log('🔑 Verifying password...');
     const isValidPassword = await User.verifyPassword(password, user.password_hash);
+    console.log('🔑 Password valid:', isValidPassword);
+    
     if (!isValidPassword) {
+      console.log('❌ Invalid password');
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    console.log('🎫 Generating token...');
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
@@ -52,8 +61,10 @@ router.post('/login', async (req, res) => {
     );
 
     const { password_hash, ...userWithoutPassword } = user;
+    console.log('✅ Login successful for:', email);
     res.json({ user: userWithoutPassword, token });
   } catch (error) {
+    console.error('❌ Login error:', error);
     res.status(500).json({ error: error.message });
   }
 });
