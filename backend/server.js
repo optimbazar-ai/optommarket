@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pool = require('./models/db');
+const { connectMongoDB } = require('./models/mongodb');
+const { initializeTelegramBot } = require('./services/telegramBot');
+const { initializeSchedulers } = require('./services/scheduler');
 
 // Import routes
 const usersRoutes = require('./routes/users');
@@ -9,9 +12,11 @@ const productsRoutes = require('./routes/products');
 const ordersRoutes = require('./routes/orders');
 const chatbotRoutes = require('./routes/chatbot');
 const adminRoutes = require('./routes/admin');
+const blogsRoutes = require('./routes/blogs');
+const promotionsRoutes = require('./routes/promotions');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 const allowedOrigins = process.env.NODE_ENV === 'production'
@@ -21,6 +26,8 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
       process.env.FRONTEND_URL,
     ].filter(Boolean)
   : [
+      'http://localhost:3000', 
+      'http://127.0.0.1:3000',
       'http://localhost:5000', 
       'http://127.0.0.1:5000',
       ...(process.env.REPLIT_DEV_DOMAIN ? [
@@ -81,6 +88,8 @@ app.use('/api/products', productsRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/blogs', blogsRoutes);
+app.use('/api/promotions', promotionsRoutes);
 
 // 404 Handler
 app.use((req, res) => {
@@ -99,8 +108,34 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Initialize MongoDB, Telegram Bot, and Schedulers
+const initializeServices = async () => {
+  console.log('\n🔧 Initializing services...');
+  
+  // Environment variables check
+  console.log('\n📋 Environment Variables:');
+  console.log(`- DATABASE_URL: ${process.env.DATABASE_URL ? '✓ Loaded' : '✗ Missing'}`);
+  console.log(`- MONGODB_URI: ${process.env.MONGODB_URI ? '✓ Loaded' : '✗ Missing'}`);
+  console.log(`- JWT_SECRET: ${process.env.JWT_SECRET ? '✓ Loaded' : '✗ Missing'}`);
+  console.log(`- GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? `✓ Loaded (${process.env.GEMINI_API_KEY.substring(0, 10)}...)` : '✗ Missing'}`);
+  console.log();
+  
+  // Connect to MongoDB (optional)
+  const mongoConnected = await connectMongoDB();
+  
+  // Initialize Telegram Bot (optional)
+  initializeTelegramBot();
+  
+  // Initialize Schedulers (only if MongoDB is connected)
+  if (mongoConnected) {
+    initializeSchedulers();
+  } else {
+    console.log('⚠️  Schedulers disabled (MongoDB required)');
+  }
+};
+
 // Start Server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`\n${'='.repeat(50)}`);
   console.log(`🚀 OPTOMMARKET Backend Server`);
   console.log(`${'='.repeat(50)}`);
@@ -109,6 +144,13 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🔗 Database: ${process.env.DATABASE_URL ? 'Configured ✅' : 'Not configured ❌'}`);
   console.log(`🤖 Chatbot: POST http://localhost:${PORT}/api/chatbot/chat`);
   console.log(`${'='.repeat(50)}\n`);
+  
+  // Initialize services
+  await initializeServices();
+  
+  console.log(`\n✓ Server running on port ${PORT}`);
+  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✓ API available at: http://localhost:${PORT}/api`);
 });
 
 module.exports = app;
